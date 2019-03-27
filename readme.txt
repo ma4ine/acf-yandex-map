@@ -10,7 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Yandex Map for ACF
 
-== Description ==
+== Description1 ==
 
 Allow use Yandex Map in Advanced Custom Fields, as standalone field or in repeater field
 
