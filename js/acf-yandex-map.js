@@ -3,6 +3,16 @@
     'use strict';
 
     /**
+     * Get ACF data
+     */
+    var $district = $('[data-name="location-district"] input').val();
+    var $city = $('[data-name="location-city"] select option[selected="selected"]').text();
+    var $address = $('[data-name="location-address"] input').val();
+    var $location = $district + ', ' + $city + ', ' + $address;
+
+    console.log($location);
+
+    /**
      * Initialize admin interface
      *
      * @param {element} $el
@@ -41,6 +51,12 @@
          * @type {Object}
          */
         var $map = null;
+
+        /**
+         * Yandex map geocoder
+         *
+         */
+        var $geocoder;
 
         /// Init fields
 
@@ -101,19 +117,30 @@
                 save_map();
             });
 
+            // Geocoder
+            $geocoder = ymaps.geocode( $location );
+
+            $geocoder.then(function (res) {
+                console.log('Geocoder here');
+                console.log(res.geoObjects.get(0).getAddressLine());
+            }, function (err) {
+                console.log('Yandex.Maps Geocoder Error');
+            });
+
             /// Search Control
 
             var search_controll = $map.controls.get('searchControl');
             search_controll.options.set({
-                noPlacemark: false, // lev
-                useMapBounds: true, // lev
-                noSelect: false, // lev
+                noPlacemark: true,
+                useMapBounds: true, // was false
+                noSelect: true,
                 kind: 'locality',
                 width: 250
             });
 
             search_controll.events.add('resultselect', function () {
-                $map.geoObjects.removeAll();
+                // $map.geoObjects.removeAll(); // remove all placemarks
+                // create_mark(e.get('coords')); // create mark on search
                 save_map();
             });
 
@@ -121,7 +148,7 @@
 
             var geo_control = $map.controls.get('geolocationControl');
             geo_control.events.add('locationchange', function () {
-                $map.geoObjects.removeAll();
+                // $map.geoObjects.removeAll(); // don't remove placemark
                 save_map();
             });
 
@@ -284,17 +311,22 @@
 
             if (marker_type == 'point') { // create placemark
 
+                $map.geoObjects.removeAll(); // remove all placemars
+
                 place_mark = new ymaps.Placemark(
                     coords,
                     {
                         //iconContent: mark_id,
                         hintContent: acf_yandex_locale.mark_hint
                     }, {
+                        preset: "islands#orangeDotIcon",
                         draggable: true
                     }
                 );
 
             } else { // if mark is circle
+
+                $map.geoObjects.removeAll(); // remove all placemarks
 
                 var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
 
