@@ -105,9 +105,9 @@
 
             var search_controll = $map.controls.get('searchControl');
             search_controll.options.set({
-                noPlacemark: true,
-                useMapBounds: false,
-                noSelect: true,
+                noPlacemark: false, // lev
+                useMapBounds: true, // lev
+                noSelect: false, // lev
                 kind: 'locality',
                 width: 250
             });
