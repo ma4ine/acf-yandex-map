@@ -10,8 +10,6 @@
     var $address = $('[data-name="location-address"] input').val();
     var $location = $district + ', ' + $city + ', ' + $address;
 
-    console.log($location);
-
     /**
      * Initialize admin interface
      *
@@ -57,6 +55,12 @@
          *
          */
         var $geocoder;
+
+        /**
+         * Geocoder coordinates
+         *
+         */
+        var $coords;
 
         /// Init fields
 
@@ -117,15 +121,31 @@
                 save_map();
             });
 
-            // Geocoder
-            $geocoder = ymaps.geocode( $location );
+            /// Geocoder
 
-            $geocoder.then(function (res) {
-                console.log('Geocoder here');
-                console.log(res.geoObjects.get(0).getAddressLine());
-            }, function (err) {
-                console.log('Yandex.Maps Geocoder Error');
-            });
+            if ( $params.marks.length === 0 ) { // if there are no marks
+                
+                console.log('Geocoder works here');
+
+                $geocoder = ymaps.geocode( $location ); // start geocoder
+
+                $geocoder.then(function (res) {
+
+                    var object = res.geoObjects.get(0); // get first object
+                    var coords = object.geometry.getCoordinates(); // get coords
+                    var bounds = object.properties.get('boundedBy'); // get bounds
+
+                    create_mark(coords, 'Point', 0, 1, ''); // create mark
+
+                    $map.setBounds(bounds, { checkZoomRange: true }); // show map with bounds
+
+                    save_map(); // save map
+
+                }, function (err) {
+                    console.log('Yandex.Maps Geocoder Error');
+                });
+
+            };
 
             /// Search Control
 
@@ -140,7 +160,7 @@
 
             search_controll.events.add('resultselect', function () {
                 // $map.geoObjects.removeAll(); // remove all placemarks
-                // create_mark(e.get('coords')); // create mark on search
+                // create_mark(e.get('coords')); // create mark
                 save_map();
             });
 
@@ -356,11 +376,13 @@
                 save_map();
             });
 
-            place_mark.events.add('click', function () {
-                if (!this.balloon.isOpen()) {
-                    show_mark_editor(this);
-                }
-            }, place_mark);
+            /// disabled mark click baloon open
+
+            // place_mark.events.add('click', function () {
+            //     if (!this.balloon.isOpen()) {
+            //         show_mark_editor(this);
+            //     }
+            // }, place_mark);
 
             place_mark.properties.set('id', mark_id);
             place_mark.properties.set('content', mark_content);
