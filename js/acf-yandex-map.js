@@ -331,6 +331,7 @@
 
             if (marker_type == 'point') { // create placemark
 
+
                 $map.geoObjects.removeAll(); // remove all placemars
 
                 place_mark = new ymaps.Placemark(
@@ -343,6 +344,20 @@
                         draggable: true
                     }
                 );
+
+                place_mark.events.add('contextmenu', function () {
+                    $map.geoObjects.remove(this);
+                    save_map();
+                }, place_mark);
+
+                place_mark.events.add('dragend', function () {
+                    save_map();
+                });
+                place_mark.properties.set('id', mark_id);
+                place_mark.properties.set('content', mark_content);
+
+                $map.geoObjects.add(place_mark);
+
 
             } else { // if mark is circle
 
@@ -365,16 +380,67 @@
                     strokeWidth: 5
                 });
 
+                place_mark.events.add('contextmenu', function () {
+                    $map.geoObjects.remove(this);
+                    save_map();
+                }, place_mark);
+
+                place_mark.events.add('dragend', function () {
+                    save_map();
+                });
+                place_mark.properties.set('id', mark_id);
+                place_mark.properties.set('content', mark_content);
+
+                $map.geoObjects.add(place_mark);
+
+            // } else {  // if mark is polygon
+
+            //     $map.geoObjects.removeAll(); // remove all placemarks
+
+            //     console.log('polygon');
+
+            //     console.log(place_mark);
+
+            //     // Создаем многоугольник без вершин.
+            //     place_mark = new ymaps.Polygon(coords, {}, {
+            //         draggable: true,
+            //         opacity: 0.5,
+            //         // Курсор в режиме добавления новых вершин.
+            //         editorDrawingCursor: "crosshair",
+            //         // Максимально допустимое количество вершин.
+            //         editorMaxPoints: 5,
+            //         // Цвет заливки.
+            //         fillColor: '#00FF00',
+            //         // Цвет обводки.
+            //         strokeColor: '#0000FF',
+            //         // Ширина обводки.
+            //         strokeWidth: 5
+            //     });
+            //     // Добавляем многоугольник на карту.
+            //     $map.geoObjects.add(place_mark);
+
+            //     // В режиме добавления новых вершин меняем цвет обводки многоугольника.
+            //     var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
+            //     stateMonitor.add("drawing", function (newValue) {
+            //         place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
+            //     });
+
+            //     // Включаем режим редактирования с возможностью добавления новых вершин.
+            //     place_mark.editor.startDrawing();
+
+
             }
 
-            place_mark.events.add('contextmenu', function () {
-                $map.geoObjects.remove(this);
-                save_map();
-            }, place_mark);
+            /// moved to each mark type
 
-            place_mark.events.add('dragend', function () {
-                save_map();
-            });
+            // place_mark.events.add('contextmenu', function () {
+            //     $map.geoObjects.remove(this);
+            //     save_map();
+            // }, place_mark);
+
+            // place_mark.events.add('dragend', function () {
+            //     save_map();
+            // });
 
             /// disabled mark click baloon open
 
@@ -384,10 +450,12 @@
             //     }
             // }, place_mark);
 
-            place_mark.properties.set('id', mark_id);
-            place_mark.properties.set('content', mark_content);
+            /// moved to each mark type
 
-            $map.geoObjects.add(place_mark);
+            // place_mark.properties.set('id', mark_id);
+            // place_mark.properties.set('content', mark_content);
+
+            // $map.geoObjects.add(place_mark);
         }
 
         /**
