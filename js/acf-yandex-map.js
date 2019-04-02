@@ -350,112 +350,108 @@
                     save_map();
                 }, place_mark);
 
-                place_mark.events.add('dragend', function () {
-                    save_map();
-                });
+                // place_mark.events.add('dragend', function () {
+                //     save_map();
+                // });
                 place_mark.properties.set('id', mark_id);
                 place_mark.properties.set('content', mark_content);
 
                 $map.geoObjects.add(place_mark);
 
 
-            } else { // if mark is circle
+            } else { // if mark is circle (polygon)
 
                 $map.geoObjects.removeAll(); // remove all placemarks
 
-                var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
+                // var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
 
-                place_mark = new ymaps.Circle([
-                    coords,
-                    circle_size
-                ], {
-                    hintContent: acf_yandex_locale.mark_hint
-                }, {
+                // place_mark = new ymaps.Circle([
+                //     coords,
+                //     circle_size
+                // ], {
+                //     hintContent: acf_yandex_locale.mark_hint
+                // }, {
+                //     draggable: true,
+                //     opacity: 0.5,
+                //     fillOpacity: 0.1,
+                //     fillColor: "#DB709377",
+                //     strokeColor: "#990066",
+                //     strokeOpacity: 0.7,
+                //     strokeWidth: 5
+                // });
+
+                // place_mark.events.add('contextmenu', function () {
+                //     $map.geoObjects.remove(this);
+                //     save_map();
+                // }, place_mark);
+
+                // place_mark.events.add('dragend', function () {
+                //     save_map();
+                // });
+                // place_mark.properties.set('id', mark_id);
+                // place_mark.properties.set('content', mark_content);
+
+                // $map.geoObjects.add(place_mark);
+
+                // Если координаты все две то сбросим их для рисования многоугольника с нуля 
+                if ( coords.length === 2 ) {
+                    coords = [];
+                };
+
+                // Создаем многоугольник без вершин.
+                place_mark = new ymaps.Polygon(coords, {}, {
                     draggable: true,
-                    opacity: 0.5,
-                    fillOpacity: 0.1,
-                    fillColor: "#DB709377",
-                    strokeColor: "#990066",
-                    strokeOpacity: 0.7,
+                    // Курсор в режиме добавления новых вершин.
+                    editorDrawingCursor: "crosshair",
+                    // Максимально допустимое количество вершин.
+                    editorMaxPoints: 5,
+                    // Цвет заливки.
+                    fillColor: '#00FF00',
+                    // Цвет обводки.
+                    strokeColor: '#0000FF',
+                    // Ширина обводки.
                     strokeWidth: 5
                 });
 
-                place_mark.events.add('contextmenu', function () {
-                    $map.geoObjects.remove(this);
-                    save_map();
-                }, place_mark);
-
-                place_mark.events.add('dragend', function () {
-                    save_map();
-                });
                 place_mark.properties.set('id', mark_id);
                 place_mark.properties.set('content', mark_content);
 
+                // Добавляем многоугольник на карту.
                 $map.geoObjects.add(place_mark);
 
-            // } else {  // if mark is polygon
+                // В режиме добавления новых вершин меняем цвет обводки многоугольника.
+                var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
+                stateMonitor.add("drawing", function (newValue) {
+                    place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
+                    if ( newValue === false ) {
+                        save_map(); // сохраняем карту при окончании редактирования
+                    };
+                });
 
-            //     $map.geoObjects.removeAll(); // remove all placemarks
-
-            //     console.log('polygon');
-
-            //     console.log(place_mark);
-
-            //     // Создаем многоугольник без вершин.
-            //     place_mark = new ymaps.Polygon(coords, {}, {
-            //         draggable: true,
-            //         opacity: 0.5,
-            //         // Курсор в режиме добавления новых вершин.
-            //         editorDrawingCursor: "crosshair",
-            //         // Максимально допустимое количество вершин.
-            //         editorMaxPoints: 5,
-            //         // Цвет заливки.
-            //         fillColor: '#00FF00',
-            //         // Цвет обводки.
-            //         strokeColor: '#0000FF',
-            //         // Ширина обводки.
-            //         strokeWidth: 5
-            //     });
-            //     // Добавляем многоугольник на карту.
-            //     $map.geoObjects.add(place_mark);
-
-            //     // В режиме добавления новых вершин меняем цвет обводки многоугольника.
-            //     var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
-            //     stateMonitor.add("drawing", function (newValue) {
-            //         place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
-            //     });
-
-            //     // Включаем режим редактирования с возможностью добавления новых вершин.
-            //     place_mark.editor.startDrawing();
-
+                // Включаем режим редактирования с возможностью добавления новых вершин.
+                place_mark.editor.startDrawing();
 
             }
 
-            /// moved to each mark type
+            // Сохраним состояние карты после драга метки или полигона
+            place_mark.events.add('dragend', function () {
+                save_map();
+            });
+            
 
+            /// Выключили удаление метки правой кнопкой
             // place_mark.events.add('contextmenu', function () {
             //     $map.geoObjects.remove(this);
             //     save_map();
             // }, place_mark);
+            
 
-            // place_mark.events.add('dragend', function () {
-            //     save_map();
-            // });
-
-            /// disabled mark click baloon open
-
+            /// Выключили балун
             // place_mark.events.add('click', function () {
             //     if (!this.balloon.isOpen()) {
             //         show_mark_editor(this);
             //     }
             // }, place_mark);
-
-            /// moved to each mark type
-
-            // place_mark.properties.set('id', mark_id);
-            // place_mark.properties.set('content', mark_content);
-
-            // $map.geoObjects.add(place_mark);
         }
 
         /**
