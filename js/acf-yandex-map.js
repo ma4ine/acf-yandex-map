@@ -1,6 +1,6 @@
 (function ($) {
 
-    'use strict';
+    // 'use strict';
 
     /**
      * Get ACF data
@@ -120,6 +120,157 @@
             $map.events.add('boundschange', function () {
                 save_map();
             });
+
+            /// Project Lands Import (temporary disabled)
+
+            // var blogURL = acf_yandex_locale.blog_url;
+            // var postType = acf_yandex_locale.post_type;
+            // var termID = acf_yandex_locale.term_id;
+
+            // console.log(acf_yandex_locale.current_screen);
+
+            // if post type is 'land'
+            // if ( postType === 'land' ) {
+            //     // get lands
+            //     getLands();
+
+            //     function getLands() {
+
+            //         $.ajax({
+            //             type: 'GET',
+            //             dataType: 'json',
+            //             url: blogURL + '/wp-json/wp/v2/land?project=' + termID,
+            //             success: function(response) {
+
+            //                 // console.log(response[0]);
+
+            //                 var data = {
+            //                     type: 'FeatureCollection',
+            //                     features: []
+            //                 };
+
+            //                 $.each(response, function(index, post) {
+
+            //                     // Обработаем некоторые данные заранее
+            //                     var address = post.acf['location-district'] + ', ' + post.acf['location-city']['name'] + ', ' + post.acf['location-address'];
+
+            //                     // var square = post.acf[ 'land-square' ] + ' сот.';
+
+            //                     // if ( post.acf['landscape-pic'].length > 0 ) {
+            //                     //     var slope = '<img src="' + templateURL + '/svg/landscape/' + post.acf['landscape-pic'] +'.svg" alt="Ландшафт" class="slope--img slope--img-hor">';
+            //                     // } else {
+            //                     //     var slope = '';
+            //                     // }
+
+            //                     // if ( post.acf.status != undefined ) {
+            //                     //     var status = post.acf.status.name;
+            //                     // };
+
+            //                     // Проверим наличие плагина, распарсим данные
+            //                     if ( post.acf.ymap != undefined ) {
+            //                         var json = $.parseJSON(post.acf.ymap);
+            //                     };
+
+            //                     if ( post.acf.ymap != undefined && json.marks.length > 0 ) { // Если установлены координаты в плагине
+            //                         // Получим координаты из плагина
+            //                         var coords = json.marks[0].coords;
+            //                         // Определим геометрию объекта
+            //                         var geometryType = coords.length === 1 ? 'Polygon' : 'Point';
+
+            //                     } else {
+
+            //                         // Если нет, получим координаты из Геокодера
+            //                         var defaultCoords;
+
+            //                         $.get({
+            //                             async: false,
+            //                             url: 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address.replace( ', ', '+' ),
+            //                             success: function(data) {
+            //                                 defaultCoords = data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos;
+            //                             }
+            //                         }); 
+
+            //                         var coords = defaultCoords.split(' ').reverse();
+            //                         var geometryType = 'Point';
+
+            //                     }; // Координаты определены
+
+            //                     var dataItem = {
+            //                         type: 'Feature',
+            //                         // postType: post.type, 
+            //                         id: post.id,
+            //                         // link: post.link,
+            //                         options: {
+            //                             fillColor: '#44A147',
+            //                             strokeColor: '#18803F',
+            //                             strokeWidth: 2,
+            //                             opacity: 0.25
+            //                         },
+            //                         geometry: {
+            //                             type: geometryType,
+            //                             coordinates: coords
+            //                         },
+            //                         properties: {
+            //                             hintContent: post.title.rendered
+            //                         }
+            //                     };
+
+            //                     data['features'].push( dataItem );
+                                 
+            //                 }); // each end
+
+            //                 postData( data );
+
+            //             }, // success end
+            //             error: function(data) {
+            //                 // `data` will not be JSON
+            //                 console.log('JSON Error');
+            //             }
+
+            //         });
+
+            //     };
+
+            //     // post lands to json
+            //     function postData( data ) {
+
+            //         $.post({
+            //             url : blogURL + '/wp-content/plugins/acf-yandex-map/ajax/ajax-map.php',
+            //             data : {
+            //                 // postType: postType,
+            //                 json : JSON.stringify(data, "", 2)
+            //             },
+            //             success: function(response) {
+            //                 console.log('AJAX POST PROJECT');
+            //                 // let's load data to map
+            //                 loadData();
+            //             }
+            //         })  
+
+            //     };
+
+            //     // load data to map
+            //     function loadData() {
+            //         $.get({
+            //             url: blogURL + '/wp-content/plugins/acf-yandex-map/ajax/data-project.json'
+            //         }).done(function(data) {
+            //             // create object manager
+            //             var objectManager = new ymaps.ObjectManager();
+            //             // set-up object manager
+            //             objectManager.objects.options.set({
+            //                 preset: 'islands#darkOrangeDotIcon'
+            //             });
+            //             // add data
+            //             objectManager.add(data);
+            //             // add object manager to map
+            //             $map.geoObjects.add(objectManager);
+            //             // set bounds
+            //             // $map.setBounds(objectManager.getBounds());
+            //         });
+            //     };
+
+                
+            // };
 
             /// Geocoder
 
@@ -406,11 +557,11 @@
                     // Максимально допустимое количество вершин.
                     editorMaxPoints: 5,
                     // Цвет заливки.
-                    fillColor: '#00FF00',
+                    fillColor: '#44A147',
                     // Цвет обводки.
-                    strokeColor: '#0000FF',
+                    strokeColor: '#18803F',
                     // Ширина обводки.
-                    strokeWidth: 5
+                    strokeWidth: 2
                 });
 
                 place_mark.properties.set('id', mark_id);

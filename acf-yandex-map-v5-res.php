@@ -197,9 +197,27 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
                     <td style="width: 80%">
                         <select class="marker-type">
                             <option value="point" selected><?php echo __( 'Point', YA_MAP_LANG_DOMAIN ) ?></option>
-                            <option value="circle"><?php echo 'Четырехугольник' ?></option>
+                            <!-- <option value="circle"><?php // echo __( 'Circle', YA_MAP_LANG_DOMAIN ) ?></option> -->
+                            <option value="circle"><?php echo 'Многоугольник' ?></option>
                         </select>
                     </td>
+                    <!-- Disabled Circle Radius -->
+                    <!-- <th><span class="circle hidden"><?php //echo __( 'Circle radius', YA_MAP_LANG_DOMAIN ) ?></span>&nbsp; -->
+                    <!-- </th> -->
+                    <!-- <td> -->
+						<?php
+						// $m_str  = __( 'm.', YA_MAP_LANG_DOMAIN );
+						// $km_str = __( 'km.', YA_MAP_LANG_DOMAIN );
+						?>
+                        <!-- <select class="circle-size circle hidden">
+                            <option value="250" selected>250<?php // echo $m_str ?></option>
+                            <option value="500">500<?php // echo $m_str ?></option>
+                            <option value="1000">1<?php // echo $km_str ?></option>
+                            <option value="4000">4<?php // echo $km_str ?></option>
+                            <option value="10000">10<?php // echo $km_str ?></option>
+                        </select> -->
+                    <!-- </td> -->
+                    <!-- Disabled Circle Radius End -->
                 </tr>
             </table>
             <div class="map"
@@ -216,11 +234,6 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
 			wp_register_script( 'acf-yandex', "{$dir}js/acf-yandex-map.min.js", array( 'yandex-map-api' ), null, true );
 
-			// global $term;
-			$post_id = get_the_ID();
-			$term = get_the_terms( $post_id, 'project' );
-			$term_id = $term[0]->term_id;
-
 			wp_localize_script( 'acf-yandex', 'acf_yandex_locale', array(
 				'map_init_fail'      => __( 'Error init Yandex map! Field not found.', YA_MAP_LANG_DOMAIN ),
 				'mark_hint'          => __( 'Drag mark. Right click for remove', YA_MAP_LANG_DOMAIN ),
@@ -233,10 +246,6 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 				'export_desc'        => __( 'Copy it', YA_MAP_LANG_DOMAIN ),
 				'mark_save'          => __( 'Save', YA_MAP_LANG_DOMAIN ),
 				'mark_remove'        => __( 'Remove', YA_MAP_LANG_DOMAIN ),
-				// additional vars
-				'blog_url'					 => get_bloginfo( 'url' ),
-				'post_type'					 => get_post_type(),
-				'term_id' => $term_id
 			) );
 		}
 
