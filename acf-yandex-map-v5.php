@@ -191,6 +191,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
             <input type="hidden" name="<?php echo esc_attr( $field['name'] ) ?>"
                    value="<?php echo esc_attr( wp_json_encode( $data ) ) ?>"
                    class="map-input"/>
+						<?php if ( false ) : // Disabled polygon mark select ?>							
             <table class="form-table">
                 <tr>
                     <th style="width: 20%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
@@ -202,6 +203,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
                     </td>
                 </tr>
             </table>
+						<?php endif; // Disabled polygon mark select end ?>
             <div class="map"
                  style="width: auto;height:<?php echo ( esc_attr( $field['height'] ) ) ?: $this->defaults['height'] ?>px"></div>
 
@@ -219,7 +221,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			// global $term;
 			$post_id = get_the_ID();
 			$term = get_the_terms( $post_id, 'project' );
-			$term_id = $term[0]->term_id;
+			$term_id = ( $term ) ? $term[0]->term_id : '';
 
 			wp_localize_script( 'acf-yandex', 'acf_yandex_locale', array(
 				'map_init_fail'      => __( 'Error init Yandex map! Field not found.', YA_MAP_LANG_DOMAIN ),

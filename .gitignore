@@ -1,3 +1,4 @@
 node_modules/
+_res/
 docker-compose.yml
 sftp-config.json

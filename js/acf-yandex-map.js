@@ -276,7 +276,7 @@
 
             if ( $params.marks.length === 0 ) { // if there are no marks
                 
-                console.log('Geocoder works here');
+                // console.log('Geocoder works here');
 
                 $geocoder = ymaps.geocode( $location ); // start geocoder
 
@@ -470,7 +470,10 @@
         function create_mark(coords, type, size, id, content) {
 
             var place_mark = null;
-            var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
+
+            // Temporary set marker type to point only
+            // var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
+            var marker_type = 'point';
 
             var mark_id = id;
             if (id == undefined && $params.marks.length == 0)
