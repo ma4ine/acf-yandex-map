@@ -191,19 +191,19 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
             <input type="hidden" name="<?php echo esc_attr( $field['name'] ) ?>"
                    value="<?php echo esc_attr( wp_json_encode( $data ) ) ?>"
                    class="map-input"/>
-						<?php if ( false ) : // Disabled polygon mark select ?>							
+						<?php //if ( false ) : // Disabled polygon mark select ?>							
             <table class="form-table">
                 <tr>
                     <th style="width: 20%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
                     <td style="width: 80%">
                         <select class="marker-type">
                             <option value="point" selected><?php echo __( 'Point', YA_MAP_LANG_DOMAIN ) ?></option>
-                            <option value="circle"><?php echo 'Четырехугольник' ?></option>
+                            <option value="circle"><?php echo 'Полигон'; ?></option>
                         </select>
                     </td>
                 </tr>
             </table>
-						<?php endif; // Disabled polygon mark select end ?>
+						<?php //endif; // Disabled polygon mark select end ?>
             <div class="map"
                  style="width: auto;height:<?php echo ( esc_attr( $field['height'] ) ) ?: $this->defaults['height'] ?>px"></div>
 

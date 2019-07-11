@@ -471,9 +471,7 @@
 
             var place_mark = null;
 
-            // Temporary set marker type to point only
-            // var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
-            var marker_type = 'point';
+            var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
 
             var mark_id = id;
             if (id == undefined && $params.marks.length == 0)
@@ -517,37 +515,37 @@
 
                 $map.geoObjects.removeAll(); // remove all placemarks
 
-                // var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
+                var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
 
-                // place_mark = new ymaps.Circle([
-                //     coords,
-                //     circle_size
-                // ], {
-                //     hintContent: acf_yandex_locale.mark_hint
-                // }, {
-                //     draggable: true,
-                //     opacity: 0.5,
-                //     fillOpacity: 0.1,
-                //     fillColor: "#DB709377",
-                //     strokeColor: "#990066",
-                //     strokeOpacity: 0.7,
-                //     strokeWidth: 5
-                // });
+                place_mark = new ymaps.Circle([
+                    coords,
+                    circle_size
+                ], {
+                    hintContent: acf_yandex_locale.mark_hint
+                }, {
+                    draggable: true,
+                    opacity: 0.5,
+                    fillOpacity: 0.1,
+                    fillColor: "#DB709377",
+                    strokeColor: "#990066",
+                    strokeOpacity: 0.7,
+                    strokeWidth: 5
+                });
 
-                // place_mark.events.add('contextmenu', function () {
-                //     $map.geoObjects.remove(this);
-                //     save_map();
-                // }, place_mark);
+                place_mark.events.add('contextmenu', function () {
+                    $map.geoObjects.remove(this);
+                    save_map();
+                }, place_mark);
 
-                // place_mark.events.add('dragend', function () {
-                //     save_map();
-                // });
-                // place_mark.properties.set('id', mark_id);
-                // place_mark.properties.set('content', mark_content);
+                place_mark.events.add('dragend', function () {
+                    save_map();
+                });
+                place_mark.properties.set('id', mark_id);
+                place_mark.properties.set('content', mark_content);
 
-                // $map.geoObjects.add(place_mark);
+                $map.geoObjects.add(place_mark);
 
-                // Если координаты все две то сбросим их для рисования многоугольника с нуля 
+                // Если координаты всего две то сбросим их для рисования многоугольника с нуля 
                 if ( coords.length === 2 ) {
                     coords = [];
                 };
@@ -577,6 +575,7 @@
                 var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
                 stateMonitor.add("drawing", function (newValue) {
                     place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
+                    console.log('test');
                     if ( newValue === false ) {
                         save_map(); // сохраняем карту при окончании редактирования
                     };
