@@ -10,6 +10,9 @@
     var $address = $('[data-name="location-address"] input').val();
     var $location = $district + ', ' + $city + ', ' + $address;
 
+    var $template_url = acf_yandex_locale.template_url;
+    var $project_name = acf_yandex_locale.term_slug;
+
     /**
      * Initialize admin interface
      *
@@ -53,6 +56,7 @@
         /**
          * Yandex map geocoder
          *
+         * @type {object}
          */
         var $geocoder;
 
@@ -60,7 +64,7 @@
          * Geocoder coordinates
          *
          */
-        var $coords;
+        // var $coords;
 
         /// Init fields
 
@@ -106,7 +110,7 @@
             $map.controls.remove('trafficControl');
             $map.controls.remove('fullscreenControl');
             $map.behaviors.disable('scrollZoom');
-            $map.copyrights.add('&copy; Const Lab. ');
+            // $map.copyrights.add('&copy; Const Lab. ');
 
             $map.events.add('click', function (e) {
                 create_mark(e.get('coords'));
@@ -121,162 +125,11 @@
                 save_map();
             });
 
-            /// Project Lands Import (temporary disabled)
-
-            // var blogURL = acf_yandex_locale.blog_url;
-            // var postType = acf_yandex_locale.post_type;
-            // var termID = acf_yandex_locale.term_id;
-
-            // console.log(acf_yandex_locale.current_screen);
-
-            // if post type is 'land'
-            // if ( postType === 'land' ) {
-            //     // get lands
-            //     getLands();
-
-            //     function getLands() {
-
-            //         $.ajax({
-            //             type: 'GET',
-            //             dataType: 'json',
-            //             url: blogURL + '/wp-json/wp/v2/land?project=' + termID,
-            //             success: function(response) {
-
-            //                 // console.log(response[0]);
-
-            //                 var data = {
-            //                     type: 'FeatureCollection',
-            //                     features: []
-            //                 };
-
-            //                 $.each(response, function(index, post) {
-
-            //                     // Обработаем некоторые данные заранее
-            //                     var address = post.acf['location-district'] + ', ' + post.acf['location-city']['name'] + ', ' + post.acf['location-address'];
-
-            //                     // var square = post.acf[ 'land-square' ] + ' сот.';
-
-            //                     // if ( post.acf['landscape-pic'].length > 0 ) {
-            //                     //     var slope = '<img src="' + templateURL + '/svg/landscape/' + post.acf['landscape-pic'] +'.svg" alt="Ландшафт" class="slope--img slope--img-hor">';
-            //                     // } else {
-            //                     //     var slope = '';
-            //                     // }
-
-            //                     // if ( post.acf.status != undefined ) {
-            //                     //     var status = post.acf.status.name;
-            //                     // };
-
-            //                     // Проверим наличие плагина, распарсим данные
-            //                     if ( post.acf.ymap != undefined ) {
-            //                         var json = $.parseJSON(post.acf.ymap);
-            //                     };
-
-            //                     if ( post.acf.ymap != undefined && json.marks.length > 0 ) { // Если установлены координаты в плагине
-            //                         // Получим координаты из плагина
-            //                         var coords = json.marks[0].coords;
-            //                         // Определим геометрию объекта
-            //                         var geometryType = coords.length === 1 ? 'Polygon' : 'Point';
-
-            //                     } else {
-
-            //                         // Если нет, получим координаты из Геокодера
-            //                         var defaultCoords;
-
-            //                         $.get({
-            //                             async: false,
-            //                             url: 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address.replace( ', ', '+' ),
-            //                             success: function(data) {
-            //                                 defaultCoords = data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos;
-            //                             }
-            //                         }); 
-
-            //                         var coords = defaultCoords.split(' ').reverse();
-            //                         var geometryType = 'Point';
-
-            //                     }; // Координаты определены
-
-            //                     var dataItem = {
-            //                         type: 'Feature',
-            //                         // postType: post.type, 
-            //                         id: post.id,
-            //                         // link: post.link,
-            //                         options: {
-            //                             fillColor: '#44A147',
-            //                             strokeColor: '#18803F',
-            //                             strokeWidth: 2,
-            //                             opacity: 0.25
-            //                         },
-            //                         geometry: {
-            //                             type: geometryType,
-            //                             coordinates: coords
-            //                         },
-            //                         properties: {
-            //                             hintContent: post.title.rendered
-            //                         }
-            //                     };
-
-            //                     data['features'].push( dataItem );
-                                 
-            //                 }); // each end
-
-            //                 postData( data );
-
-            //             }, // success end
-            //             error: function(data) {
-            //                 // `data` will not be JSON
-            //                 console.log('JSON Error');
-            //             }
-
-            //         });
-
-            //     };
-
-            //     // post lands to json
-            //     function postData( data ) {
-
-            //         $.post({
-            //             url : blogURL + '/wp-content/plugins/acf-yandex-map/ajax/ajax-map.php',
-            //             data : {
-            //                 // postType: postType,
-            //                 json : JSON.stringify(data, "", 2)
-            //             },
-            //             success: function(response) {
-            //                 console.log('AJAX POST PROJECT');
-            //                 // let's load data to map
-            //                 loadData();
-            //             }
-            //         })  
-
-            //     };
-
-            //     // load data to map
-            //     function loadData() {
-            //         $.get({
-            //             url: blogURL + '/wp-content/plugins/acf-yandex-map/ajax/data-project.json'
-            //         }).done(function(data) {
-            //             // create object manager
-            //             var objectManager = new ymaps.ObjectManager();
-            //             // set-up object manager
-            //             objectManager.objects.options.set({
-            //                 preset: 'islands#darkOrangeDotIcon'
-            //             });
-            //             // add data
-            //             objectManager.add(data);
-            //             // add object manager to map
-            //             $map.geoObjects.add(objectManager);
-            //             // set bounds
-            //             // $map.setBounds(objectManager.getBounds());
-            //         });
-            //     };
-
-                
-            // };
-
             /// Geocoder
 
             if ( $params.marks.length === 0 ) { // if there are no marks
                 
-                // console.log('Geocoder works here');
+                console.log('Geocoder works here');
 
                 $geocoder = ymaps.geocode( $location ); // start geocoder
 
@@ -355,7 +208,8 @@
             /// Marks load
 
             $($params.marks).each(function (index, mark) {
-                create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
+                // create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
+                create_mark(mark.coords, mark.type, mark.id, mark.content);
             });
 
             /// Map balloon
@@ -484,7 +338,7 @@
             if (marker_type == 'point') { // create placemark
 
 
-                $map.geoObjects.removeAll(); // remove all placemars
+                // $map.geoObjects.removeAll(); // remove all placemars
 
                 place_mark = new ymaps.Placemark(
                     coords,
@@ -513,37 +367,7 @@
 
             } else { // if mark is circle (polygon)
 
-                $map.geoObjects.removeAll(); // remove all placemarks
-
-                var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
-
-                place_mark = new ymaps.Circle([
-                    coords,
-                    circle_size
-                ], {
-                    hintContent: acf_yandex_locale.mark_hint
-                }, {
-                    draggable: true,
-                    opacity: 0.5,
-                    fillOpacity: 0.1,
-                    fillColor: "#DB709377",
-                    strokeColor: "#990066",
-                    strokeOpacity: 0.7,
-                    strokeWidth: 5
-                });
-
-                place_mark.events.add('contextmenu', function () {
-                    $map.geoObjects.remove(this);
-                    save_map();
-                }, place_mark);
-
-                place_mark.events.add('dragend', function () {
-                    save_map();
-                });
-                place_mark.properties.set('id', mark_id);
-                place_mark.properties.set('content', mark_content);
-
-                $map.geoObjects.add(place_mark);
+                // $map.geoObjects.removeAll(); // remove all placemarks
 
                 // Если координаты всего две то сбросим их для рисования многоугольника с нуля 
                 if ( coords.length === 2 ) {
@@ -572,24 +396,32 @@
                 $map.geoObjects.add(place_mark);
 
                 // В режиме добавления новых вершин меняем цвет обводки многоугольника.
-                var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
-                stateMonitor.add("drawing", function (newValue) {
-                    place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
-                    console.log('test');
-                    if ( newValue === false ) {
-                        save_map(); // сохраняем карту при окончании редактирования
-                    };
-                });
+                // var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
+                // stateMonitor.add("drawing", function (newValue) {
+                //     place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
+                //     console.log('test');
+                //     if ( newValue === false ) {
+                //         save_map(); // сохраняем карту при окончании редактирования
+                //     };
+                // });
 
                 // Включаем режим редактирования с возможностью добавления новых вершин.
                 place_mark.editor.startDrawing();
 
             }
 
-            // Сохраним состояние карты после драга метки или полигона
+            // Сохраним состояние карты после событий с меткой или полигоном
             place_mark.events.add('dragend', function () {
                 save_map();
             });
+            place_mark.events.add('editorstatechange', function () {
+                save_map();
+            });
+            place_mark.events.add('geometrychange', function () {
+                save_map();
+            });
+
+
             
 
             /// Выключили удаление метки правой кнопкой
@@ -629,7 +461,7 @@
                     content: mark.properties.get('content'),
                     type: _type,
                     coords: mark.geometry.getCoordinates(),
-                    circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
+                    // circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
                 });
             });
             $params.marks = marks;
@@ -637,21 +469,86 @@
             $($input).val(JSON.stringify($params));
         }
 
+        console.log($template_url);
+        console.log($project_name);
+
+        var test_project = {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "postType": "land",
+              "id": 261,
+              "link": "http://vsevreestr.localhost/land/uchastok-10-2-sotki-tajtsy-leningradskaya-oblast/",
+              "options": {
+                "fillColor": "#44A147",
+                "strokeColor": "#18803F",
+                "strokeWidth": 2,
+                "opacity": 0.75
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  59.664626,
+                  30.123961
+                ]
+              },
+              "properties": {
+                "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №312</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>",
+                "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">10,2 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">900000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>",
+                "balloonContentFooter": "<div class=\"module--footer\"><a href=\"http://vsevreestr.localhost/land/uchastok-10-2-sotki-tajtsy-leningradskaya-oblast/\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>",
+                "hintContent": "Ленинградская область, пос. Тайцы, ул. Вокзальная, дом 34, корп. 1"
+              }
+            },
+            {
+              "type": "Feature",
+              "postType": "land",
+              "id": 196,
+              "link": "http://vsevreestr.localhost/land/uchastok-860/",
+              "options": {
+                "fillColor": "#44A147",
+                "strokeColor": "#18803F",
+                "strokeWidth": 2,
+                "opacity": 0.75
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  59.681866995826574,
+                  30.111483041779966
+                ]
+              },
+              "properties": {
+                "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>",
+                "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">10 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">650000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://10.0.0.38:3000/wp-content/themes/vsevreestr/svg/landscape/rovn_SN.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>",
+                "balloonContentFooter": "<div class=\"module--footer\"><a href=\"http://vsevreestr.localhost/land/uchastok-860/\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>",
+                "hintContent": "Ленинградская область, пос. Тайцы, пгт Тайцы, ул. Балтийская"
+              }
+            }
+          ]
+        }
+
+        import_map(test_project);
+
         /**
          * Import map from json
          * @param data
          * @returns {boolean}
          */
-        function import_map(data) {
+         function import_map(data) {
+
+            // console.log('import');
 
             if (data.length == 0)
                 return false;
 
-            if (data[0].name != 'import')
-                return false;
+            // if (data[0].name != 'import')
+                // return false;
 
             try {
-                var imported = $.parseJSON(data[0].value);
+                // var imported = $.parseJSON(data[0].value);
+                var imported = data.features;
+                // console.log(imported);
             }
             catch (err) {
                 console.error(err, 'Import map error');
@@ -659,31 +556,80 @@
                 return false;
             }
 
-            $params = imported;
+            // $params.marks = imported;
 
-            map_init();
+            // set default params
+            $params.zoom = 13;
+            $params.center_lat = 59.99914531368303;
+            $params.center_lng = 30.72482104954271;
+            $params.type = "map"
 
-            return false;
+            $.each(imported, function(index, val) {
+                $params.marks[index] = {
+                    "id": val.id,
+                    "content": val.id,
+                    "type": val.geometry.type,
+                    "coords": val.geometry.coordinates
+                }
+            });
+
+            console.log($params);
+
+            // map_init();
+
+            /// Marks load
+
+            // $($params.marks).each(function (index, mark) {
+            //     // create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
+            //     create_mark(mark.coords, mark.type, mark.id, mark.content);
+            // });
+
+            // return false;
         }
+        // function import_map(data) {
+
+        //     // console.log('import');
+
+        //     if (data.length == 0)
+        //         return false;
+
+        //     if (data[0].name != 'import')
+        //         return false;
+
+        //     try {
+        //         var imported = $.parseJSON(data[0].value);
+        //     }
+        //     catch (err) {
+        //         console.error(err, 'Import map error');
+        //         alert('Import map error');
+        //         return false;
+        //     }
+
+        //     $params = imported;
+
+        //     map_init();
+
+        //     return false;
+        // }
 
         /**
          * Show mark editor
          * @param mark
          */
-        function show_mark_editor(mark) {
-            var html = '<div class="ya-editor" style="margin: 5px"><form name="mark"><input type="hidden" name="id" value="' +
-                mark.properties.get('id') + '"><textarea name="content" rows="5" cols="40">' + mark.properties.get('content') +
-                '</textarea><input type="submit" class="button button-primary" value="' + acf_yandex_locale.mark_save +
-                '"/>&nbsp;<button class="button remove">' + acf_yandex_locale.mark_remove + '</button></form></div>';
+        // function show_mark_editor(mark) {
+        //     var html = '<div class="ya-editor" style="margin: 5px"><form name="mark"><input type="hidden" name="id" value="' +
+        //         mark.properties.get('id') + '"><textarea name="content" rows="5" cols="40">' + mark.properties.get('content') +
+        //         '</textarea><input type="submit" class="button button-primary" value="' + acf_yandex_locale.mark_save +
+        //         '"/>&nbsp;<button class="button remove">' + acf_yandex_locale.mark_remove + '</button></form></div>';
 
-            $map.balloon.open(mark.geometry.getCoordinates(), html);
+        //     $map.balloon.open(mark.geometry.getCoordinates(), html);
 
-            //console.info(mark.properties.get('id'));
-            //console.info(mark.properties.get('content'));
+        //     //console.info(mark.properties.get('id'));
+        //     //console.info(mark.properties.get('content'));
 
 
-            //$('input[name="color"]').wpColorPicker({});
-        }
+        //     //$('input[name="color"]').wpColorPicker({});
+        // }
 
         /**
          * Change marker type state
