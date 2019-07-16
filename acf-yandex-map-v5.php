@@ -221,7 +221,8 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			// global $term;
 			$post_id = get_the_ID();
 			$term = get_the_terms( $post_id, 'project' );
-			$term_slug = ( $term ) ? $term[0]->slug : false;
+			$term_id = ( $term ) ? $term[0]->term_id : 0;
+			$term_slug = ( $term ) ? $term[0]->slug : 'no-project';
 
 			wp_localize_script( 'acf-yandex', 'acf_yandex_locale', array(
 				'map_init_fail'      => __( 'Error init Yandex map! Field not found.', YA_MAP_LANG_DOMAIN ),
@@ -239,6 +240,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 				'blog_url'					 => get_bloginfo( 'url' ),
 				'template_url'			 => get_template_directory_uri(),
 				'post_type'					 => get_post_type(),
+				'term_id'    			   => $term_id,
 				'term_slug'    			 => $term_slug,
 			) );
 		}

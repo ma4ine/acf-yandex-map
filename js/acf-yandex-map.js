@@ -10,8 +10,196 @@
     var $address = $('[data-name="location-address"] input').val();
     var $location = $district + ', ' + $city + ', ' + $address;
 
-    var $template_url = acf_yandex_locale.template_url;
-    var $project_name = acf_yandex_locale.term_slug;
+    var blogURL = acf_yandex_locale.blog_url;
+    var templateURL = acf_yandex_locale.template_url;
+    var projectName = acf_yandex_locale.term_slug;
+    var postType = acf_yandex_locale.post_type;
+    var termID = acf_yandex_locale.term_id;
+
+    var polygonStyle = {
+        fillColor: '#44A147',
+        strokeColor: '#18803F',
+        strokeWidth: 2,
+        opacity: 0.75
+    };
+
+    /**
+     * AJAX projects JSON
+     */
+    function getLands() {
+
+        console.log(blogURL + '/wp-json/wp/v2/land?project=' + termID);
+
+        $.get({
+            dataType: 'json',
+            url: blogURL + '/wp-json/wp/v2/land?project=' + termID,
+            success: function(response) {
+
+                // console.log(response);
+
+                var data = {
+                    type: 'FeatureCollection',
+                    features: []
+                };
+
+                $.each(response, function(index, post) {
+
+                    // Обработаем некоторые данные заранее
+                    var address = post.acf['location-district'] + ', ' + post.acf['location-city']['name'] + ', ' + post.acf['location-address'];
+
+                    var square = post.acf[ 'land-square' ] + ' сот.';
+
+                    if ( post.acf['landscape-pic'].length > 0 ) {
+                        var slope = '<img src="' + templateURL + '/svg/landscape/' + post.acf['landscape-pic'] +'.svg" alt="Ландшафт" class="slope--img slope--img-hor">';
+                    } else {
+                        var slope = '';
+                    }
+
+                    if ( post.acf.status != undefined ) {
+                        var status = post.acf.status.name;
+                    };
+
+                    // Проверим наличие плагина, распарсим данные
+                    if ( post.acf.ymap != undefined ) {
+                        var json = $.parseJSON(post.acf.ymap);
+                    };
+
+                    if ( post.acf.ymap != undefined && json.marks.length > 0 ) { // Если установлены координаты в плагине
+                        // Получим координаты из плагина
+                        var coords = json.marks[0].coords;
+                        // Определим геометрию объекта
+                        var geometryType = coords.length === 1 ? 'Polygon' : 'Point';
+
+                    // } else { // синхрона не будет, тормозит
+
+                        // Если нет, получим координаты из Геокодера
+                        // var defaultCoords;
+
+                        // $.get({
+                        //     async: false,
+                        //     url: 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address.replace( ', ', '+' ),
+                        //     success: function(data) {
+                        //         defaultCoords = data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos;
+                        //     }
+                        // }); 
+
+                        // var coords = defaultCoords.split(' ').reverse();
+                        // var geometryType = 'Point';
+
+                    }; // Координаты определены
+
+                    var dataItem = {
+                        type: 'Feature',
+                        postType: post.type, 
+                        id: post.id,
+                        link: post.link,
+                        options: polygonStyle,
+                        geometry: {
+                            type: geometryType,
+                            coordinates: coords
+                        },
+                        properties: {
+                            balloonContentHeader: 
+                                '<div class="module--header">' +
+                                    '<div class="module--title module--title-available">Участок №' + post.acf['land-id'] + '</div>' +
+                                    '<div class="module--status status status-nopadding js-status">' + status + '</div>' +
+                                '</div>',
+                            balloonContentBody: 
+                                '<div class="module--body">' +
+                                    '<div class="module--item module--item-50 common_item">' +
+                                        '<div class="common_item--title"><em>Площадь участка</em></div>' +
+                                        '<div class="common_item--value">' + square + '</div>' +
+                                    '</div>' +
+                                    '<div class="module--item module--item-50 common_item">' +
+                                        '<div class="common_item--title"><em>Стоимость</em></div>' +
+                                        '<div class="common_item--value"><span class="js-money">' + post.acf.price + '</span> ₽</div>' +
+                                    '</div>' +
+                                    '<div class="module--item icb d-none d-lg-block">' +
+                                        '<i class="icb--icon icon icon-mountain"></i>' +
+                                        '<div class="icb--title">' + post.acf['spec-land'].mountain + '</div>' +
+                                    '</div>' +
+                                    '<div class="module--item slope slope-hor d-none d-lg-flex">' +
+                                        '<div class="slope--title slope--title-hor">Уклон участка</div>' +
+                                        slope + 
+                                        '<div class="slope--subtitle slope--subtitle-hor js-typo">' + post.acf['landscape-descr'] + '</div>' +
+                                    '</div>' +
+                                '</div>',
+                            balloonContentFooter:
+                                '<div class="module--footer">' +
+                                    // Temporary disabled modal desktop link
+                                    // '<button type="button" class="module--more d-none d-lg-inline-block" data-toggle="modal" data-target="#objectModal">Подробнее об участке</button>' +
+                                    // '<a href="' + post.link + '" class="module--more d-lg-none">Подробнее об участке</a>' +
+                                    '<a href="' + post.link + '" class="module--more">Подробнее об участке</a>' +
+                                    '<button type="button" class="module--but but but-green" data-toggle="modal" data-target="#orderModal">Забронировать</button>' +
+                                '</div>',
+                            hintContent: address
+                        }
+                    };
+
+                    data['features'].push( dataItem );
+                     
+                }); // each end
+
+                postData( data, 'project', projectName );
+
+            }, // success end
+            error: function(data) {
+                // `data` will not be JSON
+                console.log('JSON Error');
+            }
+
+        });
+
+    };
+
+    getLands();
+
+    function postData( data, postType, name ) {
+
+        // new post
+        if ( postType === 'project' ) {
+
+            $.when(
+                // Post project
+                $.post({
+                    url : templateURL + '/ajax/ajax-map.php',
+                    data : {
+                        postType: postType,
+                        name: name,
+                        json : JSON.stringify(data, "", 2)
+                    },
+                    success: function(response) {
+                        console.log('AJAX POST ' + postType.toUpperCase());
+                    }
+                })
+            ).then(function() {
+                // All is ready now, so...
+            });
+            
+        // } else {
+
+        //     $.when(
+        //         // Post "postType"
+        //         $.post({
+        //             url : templateURL + '/ajax/ajax-map.php',
+        //             data : {
+        //                 postType: postType,
+        //                 json : JSON.stringify(data, "", 2)
+        //             },
+        //             success: function(response) {
+        //                 console.log('AJAX POST ' + postType.toUpperCase());
+        //             }
+        //         })
+        //     ).then(function() {
+        //         // All is ready now, so...
+        //         // initBigMap();
+        //         // ymaps.ready(initBigMap);
+        //         // отключено из-за дублирования карты
+        //     });
+
+        };
+
+    };
 
     /**
      * Initialize admin interface
@@ -469,9 +657,6 @@
             $($input).val(JSON.stringify($params));
         }
 
-        console.log($template_url);
-        console.log($project_name);
-
         var test_project = {
           "type": "FeatureCollection",
           "features": [
@@ -528,7 +713,7 @@
           ]
         }
 
-        import_map(test_project);
+        import_map( templateURL + '/ajax/data-' +  'project' + '-' + projectName + '.json' );
 
         /**
          * Import map from json
@@ -537,43 +722,80 @@
          */
          function import_map(data) {
 
-            // console.log('import');
+            // console.log(data);
 
-            if (data.length == 0)
-                return false;
+            // if (data.length == 0)
+                // return false;
 
             // if (data[0].name != 'import')
                 // return false;
 
-            try {
-                // var imported = $.parseJSON(data[0].value);
-                var imported = data.features;
-                // console.log(imported);
-            }
-            catch (err) {
-                console.error(err, 'Import map error');
-                alert('Import map error');
-                return false;
-            }
+                $.get(data, function(response) {
+                    // console.log(response.features.length);
+                    // console.log(response.features);
+
+                    if ( response.features.length > 0 ) {
+                        
+                        // set default params
+                        $params.zoom = 13;
+                        $params.center_lat = 59.99914531368303;
+                        $params.center_lng = 30.72482104954271;
+                        $params.type = "map"
+
+                        $.each(response.features, function(index, val) {
+                            $params.marks[index] = {
+                                "id": val.id,
+                                "content": val.id,
+                                "type": val.geometry.type,
+                                "coords": val.geometry.coordinates
+                            };
+                        });
+
+                        console.log($params);
+
+                        // map_init();
+
+                        // $($params.marks).each(function (index, mark) {
+                        //     create_mark(mark.coords, mark.type, mark.id, mark.content);
+                        // });
+
+                        return false;
+
+                    };
+
+                });
+
+            // try {
+            //     console.log(data);
+            //     // var imported = $.parseJSON(data[0].value);
+            //     var imported = $.parseJSON(data);
+            //     // var imported = data.features;
+            //     console.log(imported);
+            // }
+            // catch (err) {
+            //     console.error(err, 'Import map error');
+            //     alert('Import map error');
+            //     return false;
+            // }
 
             // $params.marks = imported;
 
             // set default params
-            $params.zoom = 13;
-            $params.center_lat = 59.99914531368303;
-            $params.center_lng = 30.72482104954271;
-            $params.type = "map"
+            // $params.zoom = 13;
+            // $params.center_lat = 59.99914531368303;
+            // $params.center_lng = 30.72482104954271;
+            // $params.type = "map"
 
-            $.each(imported, function(index, val) {
-                $params.marks[index] = {
-                    "id": val.id,
-                    "content": val.id,
-                    "type": val.geometry.type,
-                    "coords": val.geometry.coordinates
-                }
-            });
+            // $.each(imported, function(index, val) {
+            //     $params.marks[index] = {
+            //         "id": val.id,
+            //         "content": val.id,
+            //         "type": val.geometry.type,
+            //         "coords": val.geometry.coordinates
+            //     }
+            // });
 
-            console.log($params);
+            // console.log($params);
 
             // map_init();
 
