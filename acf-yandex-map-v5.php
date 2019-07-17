@@ -195,11 +195,14 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
             <table class="form-table">
                 <tr>
                     <th style="width: 20%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
-                    <td style="width: 80%">
+                    <td style="width: 60%">
                         <select class="marker-type">
                             <option value="point" selected><?php echo __( 'Point', YA_MAP_LANG_DOMAIN ) ?></option>
                             <option value="circle"><?php echo 'Полигон'; ?></option>
                         </select>
+                    </td>
+                    <td style="width: 20%">
+                    	<button type="button" id="ymap_save" class="button button-primary" data-active="Сохранить карту" data-disabled="Карта сохранена" disabled>Карта сохранена</button>
                     </td>
                 </tr>
             </table>
