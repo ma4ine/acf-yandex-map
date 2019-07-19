@@ -162,7 +162,7 @@
             $.when(
                 // Post project
                 $.post({
-                    url : templateURL + '/ajax/ajax-map.php',
+                    url : templateURL + '/map/ajax-map.php',
                     data : {
                         postType: postType,
                         name: name,
@@ -255,10 +255,17 @@
         // var $coords;
 
         /**
+         * Project collection
+         *
+         * @type {object}
+         */
+        var $collection;
+
+        /**
          * Map edit activation
          *
          */
-         var $map_active = false;
+        var $map_active = false;
 
         /// Init fields
 
@@ -291,7 +298,7 @@
 
             if ( $term_slug != 'no-project' ) {
                 console.log('Import start');
-                var data = templateURL + '/ajax/data-project-' + $term_slug + '.json';
+                var data = templateURL + '/map/data-project-' + $term_slug + '.json';
 
                 $.when(
                     $.get(data, function(response) {
@@ -309,6 +316,7 @@
                                     "id": val.id,
                                     "content": val.id,
                                     "type": val.geometry.type,
+                                    "term": val.term,
                                     "coords": val.geometry.coordinates
                                 };
                             });
@@ -465,20 +473,25 @@
             $map.controls.add(clear_button, {top: 5, right: 5});
 
             /// Create collection
-
-            var collection = new ymaps.GeoObjectCollection({}, {
+            $collection = new ymaps.GeoObjectCollection({}, {
                 preset: "islands#redCircleIcon",
                 strokeWidth: 4,
                 geodesic: true
             });
 
+            console.log($params);
 
             /// Marks load
-
-            $($params.marks).each(function (index, mark, collection) {
-                console.log(collection);
-                create_mark(mark.coords, mark.type, mark.id, mark.content, collection);
+            $($params.marks).each(function (index, mark) {
+                create_mark(mark.coords, mark.type, mark.id, mark.content, mark.term);
             });
+
+            $map.geoObjects.add($collection);
+
+
+            // $collection.add(new ymaps.Placemark([37.61, 55.75]));
+
+            // console.log($collection);
         }
 
         /**
@@ -490,7 +503,7 @@
          * @param {int} id
          * @param {string} content
          */
-        function create_mark(coords, type, size, id, content, collection) {
+        function create_mark(coords, type, id, content, term) {
 
             var place_mark = null;
 
@@ -509,11 +522,12 @@
                 place_mark = new ymaps.Placemark(
                     coords,
                     {
-                        //iconContent: mark_id,
-                        hintContent: acf_yandex_locale.mark_hint
+                        iconContent: mark_id,
+                        hintContent: mark_content
+                        // hintContent: acf_yandex_locale.mark_hint
                     }, {
                         preset: "islands#orangeDotIcon",
-                        draggable: true
+                        // draggable: true
                     }
                 );
 
@@ -582,17 +596,20 @@
             place_mark.properties.set('id', mark_id);
             place_mark.properties.set('content', mark_content);
 
+            console.log(term);
+
             // Создадим коллекцию геообъектов и зададим опции.
+            if (term != undefined) {
 
-            console.log(collection);
+                $collection.add(place_mark);
 
-            if (collection != undefined) {
-
-                collection.add(place_mark);
-
-                $map.geoObjects.add(collection);
+                // console.log($collection);                
 
             } else {
+
+                // console.log(place_mark);
+
+                place_mark.options.set('draggable', 'true');
 
                 $map.geoObjects.add(place_mark);
 
