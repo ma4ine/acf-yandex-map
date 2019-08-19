@@ -297,6 +297,7 @@
         ymaps.ready(function () {
 
             if ( $term_slug != 'no-project' ) {
+            // if ( false ) {
                 console.log('Import start');
                 var data = templateURL + '/map/data-project-' + $term_slug + '.json';
 
@@ -376,10 +377,10 @@
 
             $map.events.add('click', function (e) {
 
-                if ( $map_active === true ) {
+                // if ( $map_active === true ) {
                     create_mark(e.get('coords'));
                     save_map();
-                };
+                // };
 
             });
 
@@ -467,7 +468,7 @@
                 // $map.balloon.close();
                 $map.geoObjects.removeAll();
                 save_map();
-                $map_active = true;
+                // $map_active = true;
             });
 
             $map.controls.add(clear_button, {top: 5, right: 5});
@@ -517,6 +518,8 @@
 
             var mark_content = (content == undefined) ? '' : content;
 
+            console.log(marker_type);
+
             if (marker_type == 'point') { // create placemark
 
                 place_mark = new ymaps.Placemark(
@@ -534,7 +537,7 @@
                 place_mark.events.add('contextmenu', function () {
                     $map.geoObjects.remove(this);
                     save_map();
-                    $map_active = true;
+                    // $map_active = true;
                 }, place_mark);
 
                 // place_mark.events.add('dragend', function () {
@@ -587,9 +590,9 @@
                 // });
 
                 // Включаем режим редактирования с возможностью добавления новых вершин.
-                if ( $map_active === true) {
+                // if ( $map_active === true) {
                     place_mark.editor.startDrawing();
-                }
+                // }
 
             }
 
@@ -657,20 +660,28 @@
 
             var marks = [];
             $map.geoObjects.each(function (mark) {
-                var _type = mark.geometry.getType();
-                marks.push({
-                    id: mark.properties.get('id'),
-                    content: mark.properties.get('content'),
-                    type: _type,
-                    coords: mark.geometry.getCoordinates(),
-                    // circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
-                });
+
+                // console.log(mark);
+
+                if ( mark.geometry != null ) {
+
+                    var _type = mark.geometry.getType();
+                    marks.push({
+                        id: mark.properties.get('id'),
+                        content: mark.properties.get('content'),
+                        type: _type,
+                        coords: mark.geometry.getCoordinates(),
+                        // circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
+                    });
+                }
             });
             $params.marks = marks;
 
+            console.log($params);
+            
             $($input).val(JSON.stringify($params));
 
-            $map_active = false;
+            // $map_active = false;
         }
 
         /**
