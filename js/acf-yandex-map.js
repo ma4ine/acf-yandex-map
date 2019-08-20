@@ -1,204 +1,23 @@
 (function ($) {
 
-    // 'use strict';
+    'use strict';
 
     /**
      * Get ACF data
      */
-    // var $district = $('[data-name="location-district"] input').val();
-    // var $city = $('[data-name="location-city"] select option[selected="selected"]').text();
-    // var $address = $('[data-name="location-address"] input').val();
-    // var $location = $district + ', ' + $city + ', ' + $address;
-
     var blogURL = acf_yandex_locale.blog_url;
     var templateURL = acf_yandex_locale.template_url;
     var postType = acf_yandex_locale.post_type;
     var termID = acf_yandex_locale.term_id;
-    var $term_slug = acf_yandex_locale.term_slug;
+    var term_slug = acf_yandex_locale.term_slug;
 
-    var $polygon_style = {
+    console.log(term_slug);
+
+    var polygon_style = {
         fillColor: '#44A147',
         strokeColor: '#18803F',
         strokeWidth: 2,
         opacity: 0.75
-    };
-
-    /**
-     * AJAX projects JSON
-     */
-    function getLands() {
-
-        // console.log(blogURL + '/wp-json/wp/v2/land?project=' + termID);
-
-        $.get({
-            dataType: 'json',
-            url: blogURL + '/wp-json/wp/v2/land?project=' + termID,
-            success: function(response) {
-
-                // console.log(response);
-
-                var data = {
-                    type: 'FeatureCollection',
-                    features: []
-                };
-
-                $.each(response, function(index, post) {
-
-                    // Обработаем некоторые данные заранее
-                    var address = post.acf['location-district'] + ', ' + post.acf['location-city']['name'] + ', ' + post.acf['location-address'];
-
-                    var square = post.acf[ 'land-square' ] + ' сот.';
-
-                    if ( post.acf['landscape-pic'].length > 0 ) {
-                        var slope = '<img src="' + templateURL + '/svg/landscape/' + post.acf['landscape-pic'] +'.svg" alt="Ландшафт" class="slope--img slope--img-hor">';
-                    } else {
-                        var slope = '';
-                    }
-
-                    if ( post.acf.status != undefined ) {
-                        var status = post.acf.status.name;
-                    };
-
-                    // Проверим наличие плагина, распарсим данные
-                    if ( post.acf.ymap != undefined ) {
-                        var json = $.parseJSON(post.acf.ymap);
-                    };
-
-                    if ( post.acf.ymap != undefined && json.marks.length > 0 ) { // Если установлены координаты в плагине
-                        // Получим координаты из плагина
-                        var coords = json.marks[0].coords;
-                        // Определим геометрию объекта
-                        var geometryType = coords.length === 1 ? 'Polygon' : 'Point';
-
-                    // } else { // синхрона не будет, тормозит
-
-                        // Если нет, получим координаты из Геокодера
-                        // var defaultCoords;
-
-                        // $.get({
-                        //     async: false,
-                        //     url: 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address.replace( ', ', '+' ),
-                        //     success: function(data) {
-                        //         defaultCoords = data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos;
-                        //     }
-                        // }); 
-
-                        // var coords = defaultCoords.split(' ').reverse();
-                        // var geometryType = 'Point';
-
-                    }; // Координаты определены
-
-                    var dataItem = {
-                        type: 'Feature',
-                        postType: post.type, 
-                        id: post.id,
-                        link: post.link,
-                        options: polygonStyle,
-                        geometry: {
-                            type: geometryType,
-                            coordinates: coords
-                        },
-                        properties: {
-                            balloonContentHeader: 
-                                '<div class="module--header">' +
-                                    '<div class="module--title module--title-available">Участок №' + post.acf['land-id'] + '</div>' +
-                                    '<div class="module--status status status-nopadding js-status">' + status + '</div>' +
-                                '</div>',
-                            balloonContentBody: 
-                                '<div class="module--body">' +
-                                    '<div class="module--item module--item-50 common_item">' +
-                                        '<div class="common_item--title"><em>Площадь участка</em></div>' +
-                                        '<div class="common_item--value">' + square + '</div>' +
-                                    '</div>' +
-                                    '<div class="module--item module--item-50 common_item">' +
-                                        '<div class="common_item--title"><em>Стоимость</em></div>' +
-                                        '<div class="common_item--value"><span class="js-money">' + post.acf.price + '</span> ₽</div>' +
-                                    '</div>' +
-                                    '<div class="module--item icb d-none d-lg-block">' +
-                                        '<i class="icb--icon icon icon-mountain"></i>' +
-                                        '<div class="icb--title">' + post.acf['spec-land'].mountain + '</div>' +
-                                    '</div>' +
-                                    '<div class="module--item slope slope-hor d-none d-lg-flex">' +
-                                        '<div class="slope--title slope--title-hor">Уклон участка</div>' +
-                                        slope + 
-                                        '<div class="slope--subtitle slope--subtitle-hor js-typo">' + post.acf['landscape-descr'] + '</div>' +
-                                    '</div>' +
-                                '</div>',
-                            balloonContentFooter:
-                                '<div class="module--footer">' +
-                                    // Temporary disabled modal desktop link
-                                    // '<button type="button" class="module--more d-none d-lg-inline-block" data-toggle="modal" data-target="#objectModal">Подробнее об участке</button>' +
-                                    // '<a href="' + post.link + '" class="module--more d-lg-none">Подробнее об участке</a>' +
-                                    '<a href="' + post.link + '" class="module--more">Подробнее об участке</a>' +
-                                    '<button type="button" class="module--but but but-green" data-toggle="modal" data-target="#orderModal">Забронировать</button>' +
-                                '</div>',
-                            hintContent: address
-                        }
-                    };
-
-                    data['features'].push( dataItem );
-                     
-                }); // each end
-
-                // postData( data, 'project', projectName );
-
-            }, // success end
-            error: function(data) {
-                // `data` will not be JSON
-                console.log('JSON Error');
-            }
-
-        });
-
-    };
-
-    // getLands();
-
-    function postData( data, postType, name ) {
-
-        // new post
-        if ( postType === 'project' ) {
-
-            $.when(
-                // Post project
-                $.post({
-                    url : templateURL + '/map/ajax-map.php',
-                    data : {
-                        postType: postType,
-                        name: name,
-                        json : JSON.stringify(data, "", 2)
-                    },
-                    success: function(response) {
-                        console.log('AJAX POST ' + postType.toUpperCase());
-                    }
-                })
-            ).then(function() {
-                // All is ready now, so...
-            });
-            
-        // } else {
-
-        //     $.when(
-        //         // Post "postType"
-        //         $.post({
-        //             url : templateURL + '/ajax/ajax-map.php',
-        //             data : {
-        //                 postType: postType,
-        //                 json : JSON.stringify(data, "", 2)
-        //             },
-        //             success: function(response) {
-        //                 console.log('AJAX POST ' + postType.toUpperCase());
-        //             }
-        //         })
-        //     ).then(function() {
-        //         // All is ready now, so...
-        //         // initBigMap();
-        //         // ymaps.ready(initBigMap);
-        //         // отключено из-за дублирования карты
-        //     });
-
-        };
-
     };
 
     /**
@@ -242,17 +61,11 @@
         var $map = null;
 
         /**
-         * Yandex map geocoder
+         * Project objects
          *
-         * @type {object}
+         * @type {array}
          */
-        // var $geocoder;
-
-        /**
-         * Geocoder coordinates
-         *
-         */
-        // var $coords;
+        var $project = [];
 
         /**
          * Project collection
@@ -260,12 +73,6 @@
          * @type {object}
          */
         var $collection;
-
-        /**
-         * Map edit activation
-         *
-         */
-        var $map_active = false;
 
         /// Init fields
 
@@ -281,68 +88,68 @@
 
         $params = $.parseJSON($($input).val());
 
-        /// Import objects
-        // function import_lands() {
+        /// Import data & map init
 
-        //     return true;
-             
-        // };
+        if ( term_slug != 'no-project' && term_slug != undefined ) {
+
+            console.log('Import start');
+
+            var data = templateURL + '/map/data-project-' + term_slug + '.json';
+
+            $.when(
+
+                $.get(data, function(response) {
+
+                    if ( response.features.length > 0 ) {
+
+                        $.each(response.features, function(index, val) {
+                            $project[index] = {
+                                "id": val.id,
+                                "content": val.id,
+                                "type": val.geometry.type,
+                                "term": val.term,
+                                "coords": val.geometry.coordinates
+                            };
+                        });
+
+                    } else {
+
+                        console.error('Data import error!');
+
+                    }
+
+                })
+
+            ).done(function() {
+
+                console.log('Import success & map start');
+                console.log($project);
+
+                ymaps.ready(function () {
+                    map_init();
+                });
+
+            }).fail(function() {
+
+                console.error('Data import error!');
+
+            });
+
+        } else {
+
+            console.log('Just map start');
+
+            ymaps.ready(function () {
+                map_init();
+            });
+
+        };
 
         /// Init map
 
         // ymaps.ready(function () {
         //     map_init();
         // });
-
-        ymaps.ready(function () {
-
-            if ( $term_slug != 'no-project' ) {
-            // if ( false ) {
-                console.log('Import start');
-                var data = templateURL + '/map/data-project-' + $term_slug + '.json';
-
-                $.when(
-                    $.get(data, function(response) {
-
-                        if ( response.features.length > 0 ) {
-                            
-                            // set default params
-                            $params.zoom = 13;
-                            $params.center_lat = 59.99914531368303;
-                            $params.center_lng = 30.72482104954271;
-                            $params.type = "map"
-
-                            $.each(response.features, function(index, val) {
-                                $params.marks[index] = {
-                                    "id": val.id,
-                                    "content": val.id,
-                                    "type": val.geometry.type,
-                                    "term": val.term,
-                                    "coords": val.geometry.coordinates
-                                };
-                            });
-
-                        };
-
-                    })
-
-                ).done(function() {
-                    map_init();
-
-                }).fail(function() {
-                    console.log('Project import error');
-                });
-
-            } else {
-
-                console.log('Just map start');
-
-                map_init();
-
-            }
-            
-
-        });
 
         /**
          * Initialization Map
@@ -368,20 +175,11 @@
             $map.controls.remove('trafficControl');
             $map.controls.remove('fullscreenControl');
             $map.behaviors.disable('scrollZoom');
-            // $map.copyrights.add('&copy; Const Lab. ');
-
-            // $map.events.add('click', function (e) {
-            //     create_mark(e.get('coords'));
-            //     save_map();
-            // });
+            $map.copyrights.add('&copy; Const Lab. ');
 
             $map.events.add('click', function (e) {
-
-                // if ( $map_active === true ) {
-                    create_mark(e.get('coords'));
-                    save_map();
-                // };
-
+                create_mark(e.get('coords'));
+                save_map();
             });
 
             $map.events.add('typechange', function (e) {
@@ -392,56 +190,29 @@
                 save_map();
             });
 
-            /// Geocoder
-
-            // if ( $params.marks.length === 0 ) { // if there are no marks
-                
-            //     console.log('Geocoder works here');
-
-            //     $geocoder = ymaps.geocode( $location ); // start geocoder
-
-            //     $geocoder.then(function (res) {
-
-            //         var object = res.geoObjects.get(0); // get first object
-            //         var coords = object.geometry.getCoordinates(); // get coords
-            //         var bounds = object.properties.get('boundedBy'); // get bounds
-
-            //         create_mark(coords, 'Point', 0, 1, ''); // create mark
-
-            //         $map.setBounds(bounds, { checkZoomRange: true }); // show map with bounds
-
-            //         save_map(); // save map
-
-            //     }, function (err) {
-            //         console.log('Yandex.Maps Geocoder Error');
-            //     });
-
-            // };
-
             /// Search Control
 
-            // var search_controll = $map.controls.get('searchControl');
-            // search_controll.options.set({
-            //     noPlacemark: true,
-            //     useMapBounds: true, // was false
-            //     noSelect: true,
-            //     kind: 'locality',
-            //     width: 250
-            // });
+            var search_controll = $map.controls.get('searchControl');
+            search_controll.options.set({
+                noPlacemark: true,
+                useMapBounds: false,
+                noSelect: true,
+                kind: 'locality',
+                width: 250
+            });
 
-            // search_controll.events.add('resultselect', function () {
-            //     // $map.geoObjects.removeAll(); // remove all placemarks
-            //     // create_mark(e.get('coords')); // create mark
-            //     save_map();
-            // });
+            search_controll.events.add('resultselect', function () {
+                $map.geoObjects.removeAll();
+                save_map();
+            });
 
             /// Geo location button
 
-            // var geo_control = $map.controls.get('geolocationControl');
-            // geo_control.events.add('locationchange', function () {
-            //     // $map.geoObjects.removeAll(); // don't remove placemark
-            //     save_map();
-            // });
+            var geo_control = $map.controls.get('geolocationControl');
+            geo_control.events.add('locationchange', function () {
+                $map.geoObjects.removeAll();
+                save_map();
+            });
 
             /// Zoom Control
 
@@ -465,34 +236,195 @@
             });
 
             clear_button.events.add('click', function () {
-                // $map.balloon.close();
+                $map.balloon.close();
                 $map.geoObjects.removeAll();
                 save_map();
-                // $map_active = true;
             });
 
             $map.controls.add(clear_button, {top: 5, right: 5});
 
-            /// Create collection
-            $collection = new ymaps.GeoObjectCollection({}, {
-                preset: "islands#redCircleIcon",
-                strokeWidth: 4,
-                geodesic: true
+            /// Collection
+
+            $collection = new ymaps.GeoObjectCollection(null, {
+                preset: 'islands#yellowIcon'
             });
 
-            console.log($params);
+            /// Marks import
 
-            /// Marks load
-            $($params.marks).each(function (index, mark) {
-                create_mark(mark.coords, mark.type, mark.id, mark.content, mark.term);
+            $($project).each(function(index, mark) {
+                import_mark(mark.coords, mark.type, mark.term, mark.id, mark.content);
             });
+
+            /// Import load
 
             $map.geoObjects.add($collection);
 
+            /// Marks load
 
-            // $collection.add(new ymaps.Placemark([37.61, 55.75]));
+            $($params.marks).each(function (index, mark) {
+                create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
+            });
 
-            // console.log($collection);
+            /// Map balloon
+
+            var center = $map.getCenter();
+
+            $map.balloon.events.add('autopanbegin', function () {
+                center = $map.getCenter();
+            });
+
+            $map.balloon.events.add('close', function () {
+                $map.setCenter(center, $map.getZoom(), {
+                    duration: 500
+                });
+            });
+
+            $map.balloon.events.add('open', function () {
+                $($el).find('.ya-import form').submit(function () {
+                    import_map($(this).serializeArray());
+                    return false;
+                });
+                $($el).find('.ya-import textarea, .ya-export textarea').focus().select();
+            });
+
+            /// Import Export Controls
+
+            var import_button = new ymaps.control.Button({
+                data: {
+                    image: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik0xMi42LDRoLTEuMDIxYy0wLjI3NiwwLTAuNSwwLjIyNC0wLjUsMC41czAuMjI0LDAuNSwwLjUsMC41SDEyLjZDMTMuMzk4LDUsMTQsNS42NDUsMTQsNi41djZjMCwwLjg1NS0wLjYwMiwxLjUtMS40LDEuNWgtMTBDMS43NDgsMTQsMSwxMy4yOTksMSwxMi41di02QzEsNS43MDEsMS43NDgsNSwyLjYsNWgwLjc2OGMwLjI3NiwwLDAuNS0wLjIyNCwwLjUtMC41UzMuNjQ1LDQsMy4zNjgsNEgyLjZDMS4xOTEsNCwwLDUuMTQ1LDAsNi41djZDMCwxMy44NTUsMS4xOTEsMTUsMi42LDE1aDEwYzEuMzQ2LDAsMi40LTEuMDk4LDIuNC0yLjV2LTZDMTUsNS4wOTgsMTMuOTQ1LDQsMTIuNiw0eiIvPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik03LjEzMywxMC4wMzRjMC4xMzcsMC4zMTUsMC41NjgsMC40MTMsMC43MDMsMC4xMDFjMC4wMTItMC4wMjksMS4xNzctMi40MTksMS45MjktMy4zNzNjMC4yNjQtMC4zMzUtMC4wOTUtMC42NC0wLjQ2My0wLjUzQzguOTgsNi4zMjgsNy45NjYsNy4wNTIsNy45NjYsNy4xMDFWMC41NzZjMC0wLjI3Ni0wLjE4OC0wLjU5MS0wLjQ2NS0wLjU5MWMtMC4wMDIsMC0wLjAwMywwLjAwMS0wLjAwNSwwLjAwMXMwLjAwMS0wLjAwMS0wLjAwMS0wLjAwMWMtMC4yNzYsMC0wLjQ5NSwwLjIyNC0wLjQ5NSwwLjVWNy4wMWMwLTAuMDQ5LTEuMDE4LTAuNzc0LTEuMzM5LTAuODY5Yy0wLjM2OC0wLjExLTAuNzE4LDAuMTg3LTAuNDY2LDAuNTNDNS44Nyw3LjU4Nyw2LjY1OSw4Ljk0Myw3LjEzMywxMC4wMzR6Ii8+PC9nPjwvc3ZnPg==',
+                    title: acf_yandex_locale.btn_import
+                },
+                options: {
+                    selectOnClick: false
+                }
+            });
+
+            import_button.events.add('click', function () {
+                $map.balloon.close();
+                $map.balloon.open($map.getBounds()[0], '<div class="ya-import" style="margin: 5px"><p class="description">' + acf_yandex_locale.import_desc + '</p><form><textarea name="import" cols="40" rows="5" autofocus></textarea><br><input type="submit" class="button" name="submit" value="' + acf_yandex_locale.import_go + '"/></form></div>');
+
+            });
+
+            var export_button = new ymaps.control.Button({
+                data: {
+                    image: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik0xMi42LDRoLTEuMDIxYy0wLjI3NiwwLTAuNSwwLjIyNC0wLjUsMC41czAuMjI0LDAuNSwwLjUsMC41SDEyLjZDMTMuMzk4LDUsMTQsNS42NDUsMTQsNi41djZjMCwwLjg1NS0wLjYwMiwxLjUtMS40LDEuNWgtMTBDMS43NDgsMTQsMSwxMy4yOTksMSwxMi41di02QzEsNS43MDEsMS43NDgsNSwyLjYsNWgwLjc2OGMwLjI3NiwwLDAuNS0wLjIyNCwwLjUtMC41UzMuNjQ1LDQsMy4zNjgsNEgyLjZDMS4xOTEsNCwwLDUuMTQ1LDAsNi41djZDMCwxMy44NTUsMS4xOTEsMTUsMi42LDE1aDEwYzEuMzQ2LDAsMi40LTEuMDk4LDIuNC0yLjV2LTZDMTUsNS4wOTgsMTMuOTQ1LDQsMTIuNiw0eiIvPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik03Ljg2OCwwLjIyNWMtMC4xMzctMC4zMTUtMC42MDItMC4zMjItMC43MzctMC4wMUM3LjExOCwwLjI0NCw1Ljk1NCwyLjYzNCw1LjIwMiwzLjU4OGMtMC4yNjQsMC4zMzUsMC4wOTUsMC42NCwwLjQ2MywwLjUzQzUuOTg2LDQuMDIyLDcsMy4yOTgsNywzLjI0OXY2LjUyNmMwLDAuMjc2LDAuMjIzLDAuNSwwLjQ5OSwwLjVjMC4wMDIsMCwwLjAwMy0wLjAwMSwwLjAwNS0wLjAwMXMtMC4wMDEsMC4wMDEsMC4wMDEsMC4wMDFjMC4yNzYsMCwwLjQ5NS0wLjIyNCwwLjQ5NS0wLjVWMy4yNDljMCwwLjA0OSwxLjAxOCwwLjc3NCwxLjMzOSwwLjg2OWMwLjM2OCwwLjExLDAuNzE4LTAuMTg3LDAuNDY2LTAuNTNDOS4xMzEsMi42NzEsOC4zNDEsMS4zMTUsNy44NjgsMC4yMjV6Ii8+PC9nPjwvc3ZnPg==',
+                    title: acf_yandex_locale.btn_export
+                },
+                options: {
+                    selectOnClick: false
+                }
+            });
+
+            export_button.events.add('click', function () {
+                $map.balloon.close();
+
+                $map.balloon.open($map.getBounds()[0], '<div class="ya-export" style="margin: 5px"><p class="description">' + acf_yandex_locale.export_desc + '</p><textarea cols="40" rows="5" readonly>'
+                + JSON.stringify($params) + '</textarea></div>');
+            });
+
+            /// Mark editor
+
+            $map.events.add('balloonopen', function () {
+                $('.ya-editor textarea').focus();
+
+                $('.ya-editor .remove').click(function (event) {
+                    var mark_id = $(event.currentTarget).parent('form').children('input[type="hidden"]').val();
+                    if (mark_id == undefined) return false;
+
+                    $map.balloon.close();
+                    $map.geoObjects.each(function (mark) {
+                        if (mark.properties.get('id') == mark_id)
+                            $map.geoObjects.remove(mark);
+                    });
+
+                    return false;
+                });
+
+                $('.ya-editor form').submit(function () {
+                    var data = $(this).serializeArray();
+                    var form = {};
+                    $.map(data, function (n, i) {
+                        form[n['name']] = n['value'];
+                    });
+
+                    $map.geoObjects.each(function (mark) {
+                        if (mark.properties.get('id') == form.id) {
+                            mark.properties.set('content', form.content);
+                            save_map();
+                        }
+                    });
+
+                    $map.balloon.close();
+
+                    return false;
+                });
+
+            });
+
+            $map.controls.add(export_button, {top: 5, right: 5});
+            $map.controls.add(import_button, {top: 5, right: 5});
+        }
+
+        /**
+         * Import geo mark
+         *
+         * @param {Array} coords
+         * @param {string} type Point type, Point or Circle
+         * @param {int} term
+         * @param {int} id
+         * @param {string} content
+         */
+        function import_mark(coords, type, term, id, content) {
+
+            // console.log(type);
+
+            var place_mark = null;
+            var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
+
+            var mark_id = id;
+            if (id == undefined && $params.marks.length == 0)
+                mark_id = 1;
+            else
+                mark_id = (id == undefined) ? ($params.marks[$params.marks.length - 1].id + 1) : id;
+
+            var mark_content = (content == undefined) ? '' : content;
+
+            if (marker_type == 'point') { // create placemark
+
+                place_mark = new ymaps.Placemark(
+                    coords,
+                    {
+                        iconContent: mark_id,
+                        hintContent: acf_yandex_locale.mark_hint
+                    }, {
+                        // draggable: true
+                    }
+                );
+
+            } else if (marker_type == 'polygon') {
+
+                place_mark = new ymaps.Polygon(
+                    coords,
+                    {
+                        // iconContent: mark_id,
+                        hintContent: acf_yandex_locale.mark_hint
+                    }, 
+                    polygon_style
+                );
+
+            } else {
+
+                console.error('Mark import error!')
+
+            }
+
+            // console.log(place_mark);
+
+            place_mark.properties.set('id', mark_id);
+            place_mark.properties.set('content', mark_content);
+
+            $collection.add(place_mark);
+
         }
 
         /**
@@ -504,10 +436,9 @@
          * @param {int} id
          * @param {string} content
          */
-        function create_mark(coords, type, id, content, term) {
+        function create_mark(coords, type, size, id, content) {
 
             var place_mark = null;
-
             var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
 
             var mark_id = id;
@@ -518,130 +449,58 @@
 
             var mark_content = (content == undefined) ? '' : content;
 
-            console.log(marker_type);
-
             if (marker_type == 'point') { // create placemark
 
                 place_mark = new ymaps.Placemark(
                     coords,
                     {
-                        iconContent: mark_id,
-                        hintContent: mark_content
-                        // hintContent: acf_yandex_locale.mark_hint
+                        //iconContent: mark_id,
+                        hintContent: acf_yandex_locale.mark_hint
                     }, {
-                        preset: "islands#orangeDotIcon",
-                        // draggable: true
+                        draggable: true
                     }
                 );
 
-                place_mark.events.add('contextmenu', function () {
-                    $map.geoObjects.remove(this);
-                    save_map();
-                    // $map_active = true;
-                }, place_mark);
+            } else { // if mark is circle
 
-                // place_mark.events.add('dragend', function () {
-                //     save_map();
-                // });
-                // place_mark.properties.set('id', mark_id);
-                // place_mark.properties.set('content', mark_content);
+                var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
 
-                // $map.geoObjects.add(place_mark);
-
-
-            } else { // if mark is circle (polygon)
-
-                // $map.geoObjects.removeAll(); // remove all placemarks
-
-                // Если координаты всего две то сбросим их для рисования многоугольника с нуля 
-                if ( coords.length === 2 ) {
-                    coords = [];
-                };
-
-                // Создаем многоугольник без вершин.
-                place_mark = new ymaps.Polygon(coords, {}, {
+                place_mark = new ymaps.Circle([
+                    coords,
+                    circle_size
+                ], {
+                    hintContent: acf_yandex_locale.mark_hint
+                }, {
                     draggable: true,
-                    // Курсор в режиме добавления новых вершин.
-                    editorDrawingCursor: "crosshair",
-                    // Максимально допустимое количество вершин.
-                    editorMaxPoints: 5,
-                    // Цвет заливки.
-                    fillColor: '#44A147',
-                    // Цвет обводки.
-                    strokeColor: '#18803F',
-                    // Ширина обводки.
-                    strokeWidth: 2
+                    opacity: 0.5,
+                    fillOpacity: 0.1,
+                    fillColor: "#DB709377",
+                    strokeColor: "#990066",
+                    strokeOpacity: 0.7,
+                    strokeWidth: 5
                 });
 
-                // place_mark.properties.set('id', mark_id);
-                // place_mark.properties.set('content', mark_content);
-
-                // Добавляем многоугольник на карту.
-                // $map.geoObjects.add(place_mark);
-
-                // В режиме добавления новых вершин меняем цвет обводки многоугольника.
-                // var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
-                // stateMonitor.add("drawing", function (newValue) {
-                //     place_mark.options.set("strokeColor", newValue ? '#FF0000' : '#0000FF');
-                //     console.log('test');
-                //     if ( newValue === false ) {
-                //         save_map(); // сохраняем карту при окончании редактирования
-                //     };
-                // });
-
-                // Включаем режим редактирования с возможностью добавления новых вершин.
-                // if ( $map_active === true) {
-                    place_mark.editor.startDrawing();
-                // }
-
             }
+
+            place_mark.events.add('contextmenu', function () {
+                $map.geoObjects.remove(this);
+                save_map();
+            }, place_mark);
+
+            place_mark.events.add('dragend', function () {
+                save_map();
+            });
+
+            place_mark.events.add('click', function () {
+                if (!this.balloon.isOpen()) {
+                    show_mark_editor(this);
+                }
+            }, place_mark);
 
             place_mark.properties.set('id', mark_id);
             place_mark.properties.set('content', mark_content);
 
-            console.log(term);
-
-            // Создадим коллекцию геообъектов и зададим опции.
-            if (term != undefined) {
-
-                $collection.add(place_mark);
-
-                // console.log($collection);                
-
-            } else {
-
-                // console.log(place_mark);
-
-                place_mark.options.set('draggable', 'true');
-
-                $map.geoObjects.add(place_mark);
-
-                // Сохраним состояние карты после событий с меткой или полигоном
-                place_mark.events.add('dragend', function () {
-                    save_map();
-                });
-                place_mark.events.add('editorstatechange', function () {
-                    save_map();
-                });
-                place_mark.events.add('geometrychange', function () {
-                    save_map();
-                });
-
-            }
-
-
-            /// Выключили удаление метки правой кнопкой
-            // place_mark.events.add('contextmenu', function () {
-            //     $map.geoObjects.remove(this);
-            //     save_map();
-            // }, place_mark);
-            
-            /// Выключили балун
-            // place_mark.events.add('click', function () {
-            //     if (!this.balloon.isOpen()) {
-            //         show_mark_editor(this);
-            //     }
-            // }, place_mark);
+            $map.geoObjects.add(place_mark);
         }
 
         /**
@@ -660,28 +519,66 @@
 
             var marks = [];
             $map.geoObjects.each(function (mark) {
-
-                // console.log(mark);
-
-                if ( mark.geometry != null ) {
-
-                    var _type = mark.geometry.getType();
-                    marks.push({
-                        id: mark.properties.get('id'),
-                        content: mark.properties.get('content'),
-                        type: _type,
-                        coords: mark.geometry.getCoordinates(),
-                        // circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
-                    });
-                }
+                var _type = mark.geometry.getType();
+                marks.push({
+                    id: mark.properties.get('id'),
+                    content: mark.properties.get('content'),
+                    type: _type,
+                    coords: mark.geometry.getCoordinates(),
+                    circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
+                });
             });
             $params.marks = marks;
 
-            console.log($params);
-            
             $($input).val(JSON.stringify($params));
+        }
 
-            // $map_active = false;
+        /**
+         * Import map from json
+         * @param data
+         * @returns {boolean}
+         */
+        function import_map(data) {
+
+            if (data.length == 0)
+                return false;
+
+            if (data[0].name != 'import')
+                return false;
+
+            try {
+                var imported = $.parseJSON(data[0].value);
+            }
+            catch (err) {
+                console.error(err, 'Import map error');
+                alert('Import map error');
+                return false;
+            }
+
+            $params = imported;
+
+            map_init();
+
+            return false;
+        }
+
+        /**
+         * Show mark editor
+         * @param mark
+         */
+        function show_mark_editor(mark) {
+            var html = '<div class="ya-editor" style="margin: 5px"><form name="mark"><input type="hidden" name="id" value="' +
+                mark.properties.get('id') + '"><textarea name="content" rows="5" cols="40">' + mark.properties.get('content') +
+                '</textarea><input type="submit" class="button button-primary" value="' + acf_yandex_locale.mark_save +
+                '"/>&nbsp;<button class="button remove">' + acf_yandex_locale.mark_remove + '</button></form></div>';
+
+            $map.balloon.open(mark.geometry.getCoordinates(), html);
+
+            //console.info(mark.properties.get('id'));
+            //console.info(mark.properties.get('content'));
+
+
+            //$('input[name="color"]').wpColorPicker({});
         }
 
         /**

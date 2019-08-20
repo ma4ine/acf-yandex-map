@@ -191,33 +191,19 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
             <input type="hidden" name="<?php echo esc_attr( $field['name'] ) ?>"
                    value="<?php echo esc_attr( wp_json_encode( $data ) ) ?>"
                    class="map-input"/>
+						<?php //if ( false ) : // Disabled polygon mark select ?>							
             <table class="form-table">
                 <tr>
-                    <th style="width: 20%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
-                    <td style="width: 30%">
+                    <th style="width: 30%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
+                    <td style="width: 70%">
                         <select class="marker-type">
                             <option value="point" selected><?php echo __( 'Point', YA_MAP_LANG_DOMAIN ) ?></option>
-                            <option value="circle"><?php echo __( 'Circle', YA_MAP_LANG_DOMAIN ) ?></option>
-                            <option value="polygon">Полигон</option>
-                        </select>
-                    </td>
-                    <th><span class="circle hidden"><?php echo __( 'Circle radius', YA_MAP_LANG_DOMAIN ) ?></span>&nbsp;
-                    </th>
-                    <td>
-						<?php
-						$m_str  = __( 'm.', YA_MAP_LANG_DOMAIN );
-						$km_str = __( 'km.', YA_MAP_LANG_DOMAIN );
-						?>
-                        <select class="circle-size circle hidden">
-                            <option value="250" selected>250<?php echo $m_str ?></option>
-                            <option value="500">500<?php echo $m_str ?></option>
-                            <option value="1000">1<?php echo $km_str ?></option>
-                            <option value="4000">4<?php echo $km_str ?></option>
-                            <option value="10000">10<?php echo $km_str ?></option>
+                            <option value="circle"><?php echo 'Полигон'; ?></option>
                         </select>
                     </td>
                 </tr>
             </table>
+						<?php //endif; // Disabled polygon mark select end ?>
             <div class="map"
                  style="width: auto;height:<?php echo ( esc_attr( $field['height'] ) ) ?: $this->defaults['height'] ?>px"></div>
 
@@ -232,7 +218,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
 			wp_register_script( 'acf-yandex', "{$dir}js/acf-yandex-map.min.js", array( 'yandex-map-api' ), null, true );
 
-			// additional data
+			// global $term;
 			$post_id = get_the_ID();
 			$term = get_the_terms( $post_id, 'project' );
 			$term_id = ( $term ) ? $term[0]->term_id : 0;
