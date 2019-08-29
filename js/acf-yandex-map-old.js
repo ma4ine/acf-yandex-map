@@ -16,9 +16,6 @@
     var termID = acf_yandex_locale.term_id;
     var term_slug = acf_yandex_locale.term_slug;
 
-    console.log(term_slug);
-    console.log('test');
-
     var polygon_style = {
         fillColor: '#44A147',
         strokeColor: '#18803F',

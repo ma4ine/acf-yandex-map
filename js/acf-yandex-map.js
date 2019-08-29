@@ -17,7 +17,7 @@
         fillColor: '#44A147',
         strokeColor: '#18803F',
         strokeWidth: 2,
-        opacity: 0.75
+        opacity: 0.5
     };
 
     /**
@@ -73,6 +73,13 @@
          * @type {object}
          */
         var $collection;
+
+        /**
+         * Project collection
+         *
+         * @type {boolean}
+         */
+        var $map_active;
 
         /// Init fields
 
@@ -174,12 +181,15 @@
 
             $map.controls.remove('trafficControl');
             $map.controls.remove('fullscreenControl');
+            $map.controls.remove('searchControl');
             $map.behaviors.disable('scrollZoom');
-            $map.copyrights.add('&copy; Const Lab. ');
+            $map.copyrights.add('&copy; DKI ');
 
             $map.events.add('click', function (e) {
-                create_mark(e.get('coords'));
-                save_map();
+                if ($map_active) {
+                    create_mark(e.get('coords'));
+                    save_map();
+                }
             });
 
             $map.events.add('typechange', function (e) {
@@ -190,27 +200,10 @@
                 save_map();
             });
 
-            /// Search Control
-
-            var search_controll = $map.controls.get('searchControl');
-            search_controll.options.set({
-                noPlacemark: true,
-                useMapBounds: false,
-                noSelect: true,
-                kind: 'locality',
-                width: 250
-            });
-
-            search_controll.events.add('resultselect', function () {
-                $map.geoObjects.removeAll();
-                save_map();
-            });
-
             /// Geo location button
 
             var geo_control = $map.controls.get('geolocationControl');
             geo_control.events.add('locationchange', function () {
-                $map.geoObjects.removeAll();
                 save_map();
             });
 
@@ -236,8 +229,12 @@
             });
 
             clear_button.events.add('click', function () {
-                $map.balloon.close();
-                $map.geoObjects.removeAll();
+                $map.geoObjects.each(function (mark) {
+                    if (mark.geometry != null) { // if not collection
+                        $map.geoObjects.remove(mark);
+                    };
+                });
+                $map_active = true;
                 save_map();
             });
 
@@ -252,7 +249,7 @@
             /// Marks import
 
             $($project).each(function(index, mark) {
-                import_mark(mark.coords, mark.type, mark.term, mark.id, mark.content);
+                import_mark(mark.coords, mark.type, mark.term, mark.id);
             });
 
             /// Import load
@@ -265,104 +262,6 @@
                 create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
             });
 
-            /// Map balloon
-
-            var center = $map.getCenter();
-
-            $map.balloon.events.add('autopanbegin', function () {
-                center = $map.getCenter();
-            });
-
-            $map.balloon.events.add('close', function () {
-                $map.setCenter(center, $map.getZoom(), {
-                    duration: 500
-                });
-            });
-
-            $map.balloon.events.add('open', function () {
-                $($el).find('.ya-import form').submit(function () {
-                    import_map($(this).serializeArray());
-                    return false;
-                });
-                $($el).find('.ya-import textarea, .ya-export textarea').focus().select();
-            });
-
-            /// Import Export Controls
-
-            var import_button = new ymaps.control.Button({
-                data: {
-                    image: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik0xMi42LDRoLTEuMDIxYy0wLjI3NiwwLTAuNSwwLjIyNC0wLjUsMC41czAuMjI0LDAuNSwwLjUsMC41SDEyLjZDMTMuMzk4LDUsMTQsNS42NDUsMTQsNi41djZjMCwwLjg1NS0wLjYwMiwxLjUtMS40LDEuNWgtMTBDMS43NDgsMTQsMSwxMy4yOTksMSwxMi41di02QzEsNS43MDEsMS43NDgsNSwyLjYsNWgwLjc2OGMwLjI3NiwwLDAuNS0wLjIyNCwwLjUtMC41UzMuNjQ1LDQsMy4zNjgsNEgyLjZDMS4xOTEsNCwwLDUuMTQ1LDAsNi41djZDMCwxMy44NTUsMS4xOTEsMTUsMi42LDE1aDEwYzEuMzQ2LDAsMi40LTEuMDk4LDIuNC0yLjV2LTZDMTUsNS4wOTgsMTMuOTQ1LDQsMTIuNiw0eiIvPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik03LjEzMywxMC4wMzRjMC4xMzcsMC4zMTUsMC41NjgsMC40MTMsMC43MDMsMC4xMDFjMC4wMTItMC4wMjksMS4xNzctMi40MTksMS45MjktMy4zNzNjMC4yNjQtMC4zMzUtMC4wOTUtMC42NC0wLjQ2My0wLjUzQzguOTgsNi4zMjgsNy45NjYsNy4wNTIsNy45NjYsNy4xMDFWMC41NzZjMC0wLjI3Ni0wLjE4OC0wLjU5MS0wLjQ2NS0wLjU5MWMtMC4wMDIsMC0wLjAwMywwLjAwMS0wLjAwNSwwLjAwMXMwLjAwMS0wLjAwMS0wLjAwMS0wLjAwMWMtMC4yNzYsMC0wLjQ5NSwwLjIyNC0wLjQ5NSwwLjVWNy4wMWMwLTAuMDQ5LTEuMDE4LTAuNzc0LTEuMzM5LTAuODY5Yy0wLjM2OC0wLjExLTAuNzE4LDAuMTg3LTAuNDY2LDAuNTNDNS44Nyw3LjU4Nyw2LjY1OSw4Ljk0Myw3LjEzMywxMC4wMzR6Ii8+PC9nPjwvc3ZnPg==',
-                    title: acf_yandex_locale.btn_import
-                },
-                options: {
-                    selectOnClick: false
-                }
-            });
-
-            import_button.events.add('click', function () {
-                $map.balloon.close();
-                $map.balloon.open($map.getBounds()[0], '<div class="ya-import" style="margin: 5px"><p class="description">' + acf_yandex_locale.import_desc + '</p><form><textarea name="import" cols="40" rows="5" autofocus></textarea><br><input type="submit" class="button" name="submit" value="' + acf_yandex_locale.import_go + '"/></form></div>');
-
-            });
-
-            var export_button = new ymaps.control.Button({
-                data: {
-                    image: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik0xMi42LDRoLTEuMDIxYy0wLjI3NiwwLTAuNSwwLjIyNC0wLjUsMC41czAuMjI0LDAuNSwwLjUsMC41SDEyLjZDMTMuMzk4LDUsMTQsNS42NDUsMTQsNi41djZjMCwwLjg1NS0wLjYwMiwxLjUtMS40LDEuNWgtMTBDMS43NDgsMTQsMSwxMy4yOTksMSwxMi41di02QzEsNS43MDEsMS43NDgsNSwyLjYsNWgwLjc2OGMwLjI3NiwwLDAuNS0wLjIyNCwwLjUtMC41UzMuNjQ1LDQsMy4zNjgsNEgyLjZDMS4xOTEsNCwwLDUuMTQ1LDAsNi41djZDMCwxMy44NTUsMS4xOTEsMTUsMi42LDE1aDEwYzEuMzQ2LDAsMi40LTEuMDk4LDIuNC0yLjV2LTZDMTUsNS4wOTgsMTMuOTQ1LDQsMTIuNiw0eiIvPjxwYXRoIGZpbGw9IiM2NjY2NjYiIGQ9Ik03Ljg2OCwwLjIyNWMtMC4xMzctMC4zMTUtMC42MDItMC4zMjItMC43MzctMC4wMUM3LjExOCwwLjI0NCw1Ljk1NCwyLjYzNCw1LjIwMiwzLjU4OGMtMC4yNjQsMC4zMzUsMC4wOTUsMC42NCwwLjQ2MywwLjUzQzUuOTg2LDQuMDIyLDcsMy4yOTgsNywzLjI0OXY2LjUyNmMwLDAuMjc2LDAuMjIzLDAuNSwwLjQ5OSwwLjVjMC4wMDIsMCwwLjAwMy0wLjAwMSwwLjAwNS0wLjAwMXMtMC4wMDEsMC4wMDEsMC4wMDEsMC4wMDFjMC4yNzYsMCwwLjQ5NS0wLjIyNCwwLjQ5NS0wLjVWMy4yNDljMCwwLjA0OSwxLjAxOCwwLjc3NCwxLjMzOSwwLjg2OWMwLjM2OCwwLjExLDAuNzE4LTAuMTg3LDAuNDY2LTAuNTNDOS4xMzEsMi42NzEsOC4zNDEsMS4zMTUsNy44NjgsMC4yMjV6Ii8+PC9nPjwvc3ZnPg==',
-                    title: acf_yandex_locale.btn_export
-                },
-                options: {
-                    selectOnClick: false
-                }
-            });
-
-            export_button.events.add('click', function () {
-                $map.balloon.close();
-
-                $map.balloon.open($map.getBounds()[0], '<div class="ya-export" style="margin: 5px"><p class="description">' + acf_yandex_locale.export_desc + '</p><textarea cols="40" rows="5" readonly>'
-                + JSON.stringify($params) + '</textarea></div>');
-            });
-
-            /// Mark editor
-
-            $map.events.add('balloonopen', function () {
-                $('.ya-editor textarea').focus();
-
-                $('.ya-editor .remove').click(function (event) {
-                    var mark_id = $(event.currentTarget).parent('form').children('input[type="hidden"]').val();
-                    if (mark_id == undefined) return false;
-
-                    $map.balloon.close();
-                    $map.geoObjects.each(function (mark) {
-                        if (mark.properties.get('id') == mark_id)
-                            $map.geoObjects.remove(mark);
-                    });
-
-                    return false;
-                });
-
-                $('.ya-editor form').submit(function () {
-                    var data = $(this).serializeArray();
-                    var form = {};
-                    $.map(data, function (n, i) {
-                        form[n['name']] = n['value'];
-                    });
-
-                    $map.geoObjects.each(function (mark) {
-                        if (mark.properties.get('id') == form.id) {
-                            mark.properties.set('content', form.content);
-                            save_map();
-                        }
-                    });
-
-                    $map.balloon.close();
-
-                    return false;
-                });
-
-            });
-
-            $map.controls.add(export_button, {top: 5, right: 5});
-            $map.controls.add(import_button, {top: 5, right: 5});
         }
 
         /**
@@ -374,57 +273,41 @@
          * @param {int} id
          * @param {string} content
          */
-        function import_mark(coords, type, term, id, content) {
+        function import_mark(coords, type, term, id) {
 
             // console.log(type);
 
             var place_mark = null;
-            var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
-
+            var marker_type = type.toLowerCase();
             var mark_id = id;
-            if (id == undefined && $params.marks.length == 0)
-                mark_id = 1;
-            else
-                mark_id = (id == undefined) ? ($params.marks[$params.marks.length - 1].id + 1) : id;
-
-            var mark_content = (content == undefined) ? '' : content;
 
             if (marker_type == 'point') { // create placemark
 
-                place_mark = new ymaps.Placemark(
-                    coords,
+                place_mark = new ymaps.Placemark(coords,
                     {
-                        iconContent: mark_id,
-                        hintContent: acf_yandex_locale.mark_hint
-                    }, {
-                        // draggable: true
-                    }
+                        // iconContent: mark_id,
+                        hintContent: mark_id
+                    }, 
+                    {}
                 );
 
             } else if (marker_type == 'polygon') {
 
-                place_mark = new ymaps.Polygon(
-                    coords,
+                place_mark = new ymaps.Polygon(coords,
                     {
-                        // iconContent: mark_id,
-                        hintContent: acf_yandex_locale.mark_hint
-                    }, 
+                        hintContent: mark_id
+                    },
                     polygon_style
                 );
 
             } else {
 
                 console.error('Mark import error!')
+                return false;
 
             }
 
-            // console.log(place_mark);
-
-            place_mark.properties.set('id', mark_id);
-            place_mark.properties.set('content', mark_content);
-
             $collection.add(place_mark);
-
         }
 
         /**
@@ -441,6 +324,8 @@
             var place_mark = null;
             var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
 
+            console.log(marker_type);
+
             var mark_id = id;
             if (id == undefined && $params.marks.length == 0)
                 mark_id = 1;
@@ -451,56 +336,56 @@
 
             if (marker_type == 'point') { // create placemark
 
-                place_mark = new ymaps.Placemark(
-                    coords,
-                    {
-                        //iconContent: mark_id,
-                        hintContent: acf_yandex_locale.mark_hint
-                    }, {
+                place_mark = new ymaps.Placemark(coords, {}, {
                         draggable: true
                     }
                 );
 
-            } else { // if mark is circle
+                $map.geoObjects.add(place_mark);
 
-                var circle_size = (size != null) ? size : (parseInt($($el).find('.circle-size').val()) / 2);
+                $map_active = false;
 
-                place_mark = new ymaps.Circle([
-                    coords,
-                    circle_size
-                ], {
-                    hintContent: acf_yandex_locale.mark_hint
-                }, {
-                    draggable: true,
-                    opacity: 0.5,
-                    fillOpacity: 0.1,
-                    fillColor: "#DB709377",
-                    strokeColor: "#990066",
-                    strokeOpacity: 0.7,
-                    strokeWidth: 5
+            } else if (marker_type == 'polygon') { // if mark is polygon
+
+                if (coords.length === 2) {
+                    coords = [];
+                };
+
+                var place_mark = new ymaps.Polygon(coords, {}, {
+                    editorDrawingCursor: "crosshair",
+                    editorMaxPoints: 5,
+                    fillColor: '#44A147',
+                    strokeColor: '#18803F',
+                    strokeWidth: 2,
+                    opacity: 1
                 });
 
-            }
+                $map.geoObjects.add(place_mark);
 
-            place_mark.events.add('contextmenu', function () {
-                $map.geoObjects.remove(this);
-                save_map();
-            }, place_mark);
+                place_mark.editor.startDrawing();
+
+                var stateMonitor = new ymaps.Monitor(place_mark.editor.state);
+                stateMonitor.add("drawing", function (newValue) {
+                    $map_active = false;
+                });
+
+            } else {
+
+                console.error('Marker type error!');
+                return false;
+
+            }
 
             place_mark.events.add('dragend', function () {
                 save_map();
             });
+            place_mark.events.add('editorstatechange', function () {
+                save_map();
+            });
+            place_mark.events.add('geometrychange', function () {
+                save_map();
+            });
 
-            place_mark.events.add('click', function () {
-                if (!this.balloon.isOpen()) {
-                    show_mark_editor(this);
-                }
-            }, place_mark);
-
-            place_mark.properties.set('id', mark_id);
-            place_mark.properties.set('content', mark_content);
-
-            $map.geoObjects.add(place_mark);
         }
 
         /**
@@ -519,82 +404,37 @@
 
             var marks = [];
             $map.geoObjects.each(function (mark) {
-                var _type = mark.geometry.getType();
-                marks.push({
-                    id: mark.properties.get('id'),
-                    content: mark.properties.get('content'),
-                    type: _type,
-                    coords: mark.geometry.getCoordinates(),
-                    circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
-                });
+                if (mark.geometry != null) { // if not collection
+                    var _type = mark.geometry.getType();
+                    marks.push({
+                        id: mark.properties.get('id'),
+                        content: mark.properties.get('content'),
+                        type: _type,
+                        coords: mark.geometry.getCoordinates(),
+                        circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
+                    });
+                };
             });
+
             $params.marks = marks;
 
             $($input).val(JSON.stringify($params));
         }
 
         /**
-         * Import map from json
-         * @param data
-         * @returns {boolean}
-         */
-        function import_map(data) {
-
-            if (data.length == 0)
-                return false;
-
-            if (data[0].name != 'import')
-                return false;
-
-            try {
-                var imported = $.parseJSON(data[0].value);
-            }
-            catch (err) {
-                console.error(err, 'Import map error');
-                alert('Import map error');
-                return false;
-            }
-
-            $params = imported;
-
-            map_init();
-
-            return false;
-        }
-
-        /**
-         * Show mark editor
-         * @param mark
-         */
-        function show_mark_editor(mark) {
-            var html = '<div class="ya-editor" style="margin: 5px"><form name="mark"><input type="hidden" name="id" value="' +
-                mark.properties.get('id') + '"><textarea name="content" rows="5" cols="40">' + mark.properties.get('content') +
-                '</textarea><input type="submit" class="button button-primary" value="' + acf_yandex_locale.mark_save +
-                '"/>&nbsp;<button class="button remove">' + acf_yandex_locale.mark_remove + '</button></form></div>';
-
-            $map.balloon.open(mark.geometry.getCoordinates(), html);
-
-            //console.info(mark.properties.get('id'));
-            //console.info(mark.properties.get('content'));
-
-
-            //$('input[name="color"]').wpColorPicker({});
-        }
-
-        /**
          * Change marker type state
          */
-        $('.marker-type').on('change', function () {
-            var label = $(this).parent().next('th').children(0);
-            var select = $(this).parent().next('th').next('td').children(0);
-            if (this.value == 'circle') {
-                label.removeClass('hidden');
-                select.removeClass('hidden');
-            } else {
-                label.addClass('hidden');
-                select.addClass('hidden');
-            }
-        });
+        // $('.marker-type').on('change', function () {
+        //     var label = $(this).parent().next('th').children(0);
+        //     var select = $(this).parent().next('th').next('td').children(0);
+        //     if (this.value == 'circle') {
+        //         label.removeClass('hidden');
+        //         select.removeClass('hidden');
+        //     } else {
+        //         label.addClass('hidden');
+        //         select.addClass('hidden');
+        //     }
+        // });
 
     }
 
