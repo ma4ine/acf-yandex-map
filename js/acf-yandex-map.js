@@ -101,7 +101,7 @@
 
             console.log('Import start');
 
-            var data = templateURL + '/map/data-project-' + term_slug + '.json';
+            var data = templateURL + '/map/data-land-' + term_slug + '.json';
 
             $.when(
 
