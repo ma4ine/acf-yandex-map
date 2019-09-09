@@ -7,17 +7,37 @@
      */
     var blogURL = acf_yandex_locale.blog_url;
     var templateURL = acf_yandex_locale.template_url;
+    var postID = acf_yandex_locale.post_id;
     var postType = acf_yandex_locale.post_type;
     var termID = acf_yandex_locale.term_id;
     var term_slug = acf_yandex_locale.term_slug;
 
-    console.log(term_slug);
+    var mark_style_house_green = {
+        iconLayout: 'default#image',
+        iconImageHref: templateURL + '/svg/map/mark-house-2.svg',
+        iconImageSize: [36, 36],
+        iconImageOffset: [-6, -18]
+    };
 
-    var polygon_style = {
+    var mark_style_house_orange = {
+        iconLayout: 'default#image',
+        iconImageHref: templateURL + '/svg/map/mark-house-1.svg',
+        iconImageSize: [36, 36],
+        iconImageOffset: [-6, -18]
+    };
+
+    var polygon_style_green = {
         fillColor: '#44A147',
         strokeColor: '#18803F',
         strokeWidth: 2,
-        opacity: 0.5
+        opacity: 0.7
+    };
+
+    var polygon_style_orange = {
+        fillColor: 'rgba(0,0,0,0.00)',
+        strokeColor: '#EC6B23',
+        strokeWidth: 2,
+        opacity: 0.7
     };
 
     /**
@@ -114,7 +134,7 @@
                                 "id": val.id,
                                 "content": val.id,
                                 "type": val.geometry.type,
-                                "term": val.term,
+                                // "term": val.term,
                                 "coords": val.geometry.coordinates
                             };
                         });
@@ -130,9 +150,9 @@
             ).done(function() {
 
                 console.log('Import success & map start');
-                console.log($project);
 
                 ymaps.ready(function () {
+                    // let's go
                     map_init();
                 });
 
@@ -147,16 +167,11 @@
             console.log('Just map start');
 
             ymaps.ready(function () {
+                // let's go
                 map_init();
             });
 
         };
-
-        /// Init map
-
-        // ymaps.ready(function () {
-        //     map_init();
-        // });
 
         /**
          * Initialization Map
@@ -235,6 +250,7 @@
                     };
                 });
                 $map_active = true;
+                $('.marker-type').removeAttr('disabled');
                 save_map();
             });
 
@@ -249,7 +265,9 @@
             /// Marks import
 
             $($project).each(function(index, mark) {
-                import_mark(mark.coords, mark.type, mark.term, mark.id);
+                if (mark.id != postID) { // if not this post
+                    import_mark(mark.coords, mark.type, mark.id);
+                }
             });
 
             /// Import load
@@ -259,7 +277,7 @@
             /// Marks load
 
             $($params.marks).each(function (index, mark) {
-                create_mark(mark.coords, mark.type, mark.circle_size, mark.id, mark.content);
+                create_mark(mark.coords, mark.type, mark.id, mark.content);
             });
 
         }
@@ -273,31 +291,34 @@
          * @param {int} id
          * @param {string} content
          */
-        function import_mark(coords, type, term, id) {
+        function import_mark(coords, type, id) {
 
             // console.log(type);
 
             var place_mark = null;
             var marker_type = type.toLowerCase();
             var mark_id = id;
+            var edit_url = window.location.origin + '/wp-admin/post.php?post=' + mark_id + '&action=edit';
+
+            var place_mark_content = {
+                balloonContentBody: '<span>Объект №' + mark_id + '</span><br><a href="' + edit_url + '">Редактировать</a>',
+                hintContent: mark_id
+            }
 
             if (marker_type == 'point') { // create placemark
 
-                place_mark = new ymaps.Placemark(coords,
-                    {
-                        // iconContent: mark_id,
-                        hintContent: mark_id
-                    }, 
-                    {}
+                place_mark = new ymaps.Placemark(
+                    coords,
+                    place_mark_content,
+                    mark_style_house_orange
                 );
 
             } else if (marker_type == 'polygon') {
 
-                place_mark = new ymaps.Polygon(coords,
-                    {
-                        hintContent: mark_id
-                    },
-                    polygon_style
+                place_mark = new ymaps.Polygon(
+                    [coords],
+                    place_mark_content,
+                    polygon_style_orange
                 );
 
             } else {
@@ -319,7 +340,7 @@
          * @param {int} id
          * @param {string} content
          */
-        function create_mark(coords, type, size, id, content) {
+        function create_mark(coords, type, id, content) {
 
             var place_mark = null;
             var marker_type = (type != null) ? type.toLowerCase() : $($el).find('.marker-type').val();
@@ -336,9 +357,12 @@
 
             if (marker_type == 'point') { // create placemark
 
-                place_mark = new ymaps.Placemark(coords, {}, {
-                        draggable: true
-                    }
+                mark_style_house_green.draggable = true;
+
+                place_mark = new ymaps.Placemark(
+                    coords,
+                    {},
+                    mark_style_house_green
                 );
 
                 $map.geoObjects.add(place_mark);
@@ -351,14 +375,14 @@
                     coords = [];
                 };
 
-                var place_mark = new ymaps.Polygon(coords, {}, {
-                    editorDrawingCursor: "crosshair",
-                    editorMaxPoints: 5,
-                    fillColor: '#44A147',
-                    strokeColor: '#18803F',
-                    strokeWidth: 2,
-                    opacity: 1
-                });
+                polygon_style_green.editorDrawingCursor = 'crosshair';
+                polygon_style_green.editorMaxPoints = 5;
+
+                var place_mark = new ymaps.Polygon(
+                    coords, 
+                    {}, 
+                    polygon_style_green 
+                );
 
                 $map.geoObjects.add(place_mark);
 
@@ -386,6 +410,7 @@
                 save_map();
             });
 
+            $('.marker-type').val(marker_type).attr('disabled', 'true');
         }
 
         /**
@@ -407,11 +432,10 @@
                 if (mark.geometry != null) { // if not collection
                     var _type = mark.geometry.getType();
                     marks.push({
-                        id: mark.properties.get('id'),
-                        content: mark.properties.get('content'),
+                        id: postID,
+                        content: postID,
                         type: _type,
-                        coords: mark.geometry.getCoordinates(),
-                        circle_size: (_type == 'Circle') ? mark.geometry.getRadius() : 0
+                        coords: mark.geometry.getCoordinates()
                     });
                 };
             });
@@ -435,6 +459,7 @@
         //         select.addClass('hidden');
         //     }
         // });
+
 
     }
 

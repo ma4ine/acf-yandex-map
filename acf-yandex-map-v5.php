@@ -253,6 +253,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 				// additional vars
 				'blog_url'					 => get_bloginfo( 'url' ),
 				'template_url'			 => get_template_directory_uri(),
+				'post_id'					 	 => $post_id,
 				'post_type'					 => get_post_type(),
 				'term_id'    			   => $term_id,
 				'term_slug'    			 => $term_slug,
