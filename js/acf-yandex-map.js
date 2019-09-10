@@ -11,6 +11,7 @@
     var postType = acf_yandex_locale.post_type;
     var termID = acf_yandex_locale.term_id;
     var term_slug = acf_yandex_locale.term_slug;
+    var is_project = (acf_yandex_locale.is_project) ? true : false;
 
     var mark_style_house_green = {
         iconLayout: 'default#image',
@@ -117,9 +118,11 @@
 
         /// Import data & map init
 
-        if ( term_slug != 'no-project' && term_slug != undefined ) {
+        if ( (term_slug != 'no-project' && term_slug != undefined) || is_project ) {
 
             console.log('Import start');
+
+            console.log(term_slug);
 
             var data = templateURL + '/map/data-land-' + term_slug + '.json';
 
@@ -134,7 +137,6 @@
                                 "id": val.id,
                                 "content": val.id,
                                 "type": val.geometry.type,
-                                // "term": val.term,
                                 "coords": val.geometry.coordinates
                             };
                         });
@@ -197,28 +199,24 @@
             $map.controls.remove('trafficControl');
             $map.controls.remove('fullscreenControl');
             $map.controls.remove('searchControl');
+            $map.controls.remove('geolocationControl')
             $map.behaviors.disable('scrollZoom');
             $map.copyrights.add('&copy; DKI ');
 
-            $map.events.add('click', function (e) {
-                if ($map_active) {
-                    create_mark(e.get('coords'));
-                    save_map();
-                }
-            });
+            if (!is_project) {
+                $map.events.add('click', function (e) {
+                    if ($map_active) {
+                        create_mark(e.get('coords'));
+                        save_map();
+                    }
+                });
+            }
 
             $map.events.add('typechange', function (e) {
                 save_map();
             });
 
             $map.events.add('boundschange', function () {
-                save_map();
-            });
-
-            /// Geo location button
-
-            var geo_control = $map.controls.get('geolocationControl');
-            geo_control.events.add('locationchange', function () {
                 save_map();
             });
 
@@ -254,7 +252,42 @@
                 save_map();
             });
 
-            $map.controls.add(clear_button, {top: 5, right: 5});
+            if (!is_project) {
+                $map.controls.add(clear_button, {top: 5, right: 5});
+            };
+
+            /// Geocoding button
+
+            var geo_button = new ymaps.control.Button('Найти');
+
+            geo_button.events.add('click', function () {
+                // $map.geoObjects.each(function (mark) {
+                //     if (mark.geometry != null) { // if not collection
+                //         $map.geoObjects.remove(mark);
+                //     };
+                // });
+                // $map_active = true;
+                // $('.marker-type').removeAttr('disabled');
+                // remove object mark
+                $map.geoObjects.each(function (mark) {
+                    if (mark.geometry != null) { // if not collection
+                        $map.geoObjects.remove(mark);
+                    };
+                });
+                // get address
+                var location = 
+                    $('[data-name="location-district"] input').val() + ' ' +
+                    $('[data-name="location-city"] select option[selected="selected"]').text() + ' ' + 
+                    $('[data-name="location-address"] input').val();
+                // use gecoder
+                geocode_location(location);
+                // save map
+                save_map();
+            });
+
+            if (!is_project) {
+                $map.controls.add(geo_button);
+            };
 
             /// Collection
 
@@ -286,14 +319,10 @@
          * Import geo mark
          *
          * @param {Array} coords
-         * @param {string} type Point type, Point or Circle
          * @param {int} term
          * @param {int} id
-         * @param {string} content
          */
         function import_mark(coords, type, id) {
-
-            // console.log(type);
 
             var place_mark = null;
             var marker_type = type.toLowerCase();
@@ -313,6 +342,8 @@
                     mark_style_house_orange
                 );
 
+                $collection.add(place_mark);
+
             } else if (marker_type == 'polygon') {
 
                 place_mark = new ymaps.Polygon(
@@ -321,22 +352,20 @@
                     polygon_style_orange
                 );
 
+                $collection.add(place_mark);
+
             } else {
 
-                console.error('Mark import error!')
-                return false;
+                console.log('Object ' + id + ' without coordinates');
 
             }
-
-            $collection.add(place_mark);
         }
 
         /**
          * Create geo mark
          *
          * @param {Array} coords
-         * @param {string} type Point type, Point or Circle
-         * @param {int} size Circle size in meters
+         * @param {string} type Point type, Point
          * @param {int} id
          * @param {string} content
          */
@@ -446,20 +475,24 @@
         }
 
         /**
-         * Change marker type state
+         * Geocode object address
          */
-        // $('.marker-type').on('change', function () {
-        //     var label = $(this).parent().next('th').children(0);
-        //     var select = $(this).parent().next('th').next('td').children(0);
-        //     if (this.value == 'circle') {
-        //         label.removeClass('hidden');
-        //         select.removeClass('hidden');
-        //     } else {
-        //         label.addClass('hidden');
-        //         select.addClass('hidden');
-        //     }
-        // });
+        function geocode_location(location) {
 
+            ymaps.geocode(location, {
+                results: 1
+            }).then(function (res) {
+                var geo_object = res.geoObjects.get(0);
+                var coords = geo_object.geometry.getCoordinates();
+                var bounds = geo_object.properties.get('boundedBy');
+
+                create_mark(coords, 'point', postID, postID);
+
+                $map.setBounds(bounds, {
+                    checkZoomRange: true
+                });
+            });
+        }
 
     }
 

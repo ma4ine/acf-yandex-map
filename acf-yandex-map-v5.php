@@ -187,35 +187,19 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			$data['type']       = $this->get_map_type( $saved['type'], $field );
 			$data['marks']      = $saved['marks'] ?: array();
 
+			$current_screen = get_current_screen();
 			?>
-            <input type="hidden" name="<?php echo esc_attr( $field['name'] ) ?>"
-                   value="<?php echo esc_attr( wp_json_encode( $data ) ) ?>"
-                   class="map-input"/>
-            <table class="form-table">
+            <input type="hidden" name="<?php echo esc_attr( $field['name'] ) ?>" value="<?php echo esc_attr( wp_json_encode( $data ) ) ?>" class="map-input" />
+            <table class="form-table" style="<?php if ($current_screen->taxonomy === 'project') echo 'display: none;' ?>">
                 <tr>
                     <th style="width: 20%"><?php echo __( 'Marker type', YA_MAP_LANG_DOMAIN ) ?></th>
                     <td style="width: 30%">
                         <select class="marker-type">
                             <option value="point" selected><?php echo __( 'Point', YA_MAP_LANG_DOMAIN ) ?></option>
-                            <option value="circle"><?php echo __( 'Circle', YA_MAP_LANG_DOMAIN ) ?></option>
                             <option value="polygon">Полигон</option>
                         </select>
                     </td>
-                    <th><span class="circle hidden"><?php echo __( 'Circle radius', YA_MAP_LANG_DOMAIN ) ?></span>&nbsp;
-                    </th>
-                    <td>
-						<?php
-						$m_str  = __( 'm.', YA_MAP_LANG_DOMAIN );
-						$km_str = __( 'km.', YA_MAP_LANG_DOMAIN );
-						?>
-                        <select class="circle-size circle hidden">
-                            <option value="250" selected>250<?php echo $m_str ?></option>
-                            <option value="500">500<?php echo $m_str ?></option>
-                            <option value="1000">1<?php echo $km_str ?></option>
-                            <option value="4000">4<?php echo $km_str ?></option>
-                            <option value="10000">10<?php echo $km_str ?></option>
-                        </select>
-                    </td>
+                    <td style="width: 50%"></td>
                 </tr>
             </table>
             <div class="map"
@@ -234,9 +218,17 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 
 			// additional data
 			$post_id = get_the_ID();
-			$term = get_the_terms( $post_id, 'project' );
-			$term_id = ( $term ) ? $term[0]->term_id : 0;
-			$term_slug = ( $term ) ? $term[0]->slug : 'no-project';
+			$is_project = ( get_current_screen()->taxonomy === 'project' && get_current_screen()->base === 'term' ) ? true : false;
+
+			if ($is_project) {
+				$term_id = (isset($_GET['tag_ID'])) ? $_GET['tag_ID'] : 0;	
+				$term = get_term( $term_id );
+				$term_slug = ( $term ) ? $term->slug : 'no-project';
+			} else {
+				$term = get_the_terms( $post_id, 'project' );
+				$term_id = ( $term ) ? $term[0]->term_id : 0;
+				$term_slug = ( $term ) ? $term[0]->slug : 'no-project';
+			}
 
 			wp_localize_script( 'acf-yandex', 'acf_yandex_locale', array(
 				'map_init_fail'      => __( 'Error init Yandex map! Field not found.', YA_MAP_LANG_DOMAIN ),
@@ -257,6 +249,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 				'post_type'					 => get_post_type(),
 				'term_id'    			   => $term_id,
 				'term_slug'    			 => $term_slug,
+				'is_project'    		 => $is_project,
 			) );
 		}
 
