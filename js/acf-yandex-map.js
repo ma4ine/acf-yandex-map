@@ -118,11 +118,12 @@
 
         /// Import data & map init
 
+
+        console.log(data);
+
         if ( (term_slug != 'no-project' && term_slug != undefined) || is_project ) {
 
             console.log('Import start');
-
-            console.log(term_slug);
 
             var data = templateURL + '/map/data-land-' + term_slug + '.json';
 
@@ -161,6 +162,13 @@
             }).fail(function() {
 
                 console.error('Data import error!');
+
+                console.log('Just map start');
+
+                ymaps.ready(function () {
+                    // let's go
+                    map_init();
+                });
 
             });
 
