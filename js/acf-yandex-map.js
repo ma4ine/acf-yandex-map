@@ -269,13 +269,6 @@
             var geo_button = new ymaps.control.Button('Найти');
 
             geo_button.events.add('click', function () {
-                // $map.geoObjects.each(function (mark) {
-                //     if (mark.geometry != null) { // if not collection
-                //         $map.geoObjects.remove(mark);
-                //     };
-                // });
-                // $map_active = true;
-                // $('.marker-type').removeAttr('disabled');
                 // remove object mark
                 $map.geoObjects.each(function (mark) {
                     if (mark.geometry != null) { // if not collection
