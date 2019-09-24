@@ -39,23 +39,46 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 	 */
 	function the_yandex_map( $selector, $post_id = false, $data = null ) {
 
+		// Config
+		if (true) {
+			$debug = 'mode=debug';
+		} else {
+			$debug = 'mode=release';
+		}
+
 		$post_id = function_exists( 'acf_get_valid_post_id' ) ? acf_get_valid_post_id( $post_id ) :  $post_id;
 
 		$value = ( $data !== null ) ? $data : get_field( $selector, $post_id, false );
 
-		if ( ! $value ) {
-			return;
+		if ( !$value ) {
+			// return;
+			$is_object_map = false;
+			$defaults = array(
+				'height'     => '400',
+				'center_lat' => '59.938888',
+				'center_lng' => '30.315230',
+				'zoom'       => '10',
+				'map_type'   => 'map'
+			);
+			$value = json_encode($defaults);
+		} else {
+			$is_object_map = true;
 		}
 
 		$dir = plugin_dir_url( __FILE__ );
-		wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
+		wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?' . $debug . '&lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
 		wp_register_script( 'yandex-map-frontend', "{$dir}js/yandex-map.min.js", array( 'yandex-map-api' ), ACF_YA_MAP_VERSION );
 		wp_enqueue_script( 'yandex-map-frontend' );
 
-		$map_id = uniqid( 'map_' );
+		if ( $is_object_map ) {
+			$map_id = uniqid( 'map_' );
+		} else {
+			$map_id = $selector;
+		}
 
 		wp_localize_script( 'yandex-map-frontend', $map_id, array(
-			'params' => $value
+			'params' => $value,
+			'plugin_url' => plugin_dir_url( __FILE__ ),
 		) );
 
 		/**
