@@ -64,30 +64,26 @@
                 if (id === 'ymap_full') {
 
                     $object_manager = new ymaps.ObjectManager({
-                        clusterize: true,
-                        gridSize: 32
+                        // doesn't works with polygon
+                        // clusterize: true,
+                        // gridSize: 32
                     });
-                    $object_manager.objects.options.set({
-                        preset: 'islands#darkOrangeDotIcon',
-                        balloonMaxWidth: 235
-                    });
-                    $object_manager.clusters.options.set({
-                        preset: 'islands#darkOrangeClusterIcons',
-                    });
-                    $map.geoObjects.add($object_manager);
 
                     function load_data(data_type) {
 
-                        var plugin_url = window[id]['plugin_url']
+                        $map.geoObjects.add($object_manager);
+
+                        var plugin_url = window[id]['plugin_url'];
 
                         $.ajax({
-                            url: plugin_url + 'json/data-' + data_type + '.json'
+                            url: plugin_url + 'json/' + data_type + '.json'
                         })
                         .done(function(data) {
-                            $object_manager.remove($object_manager.objects);
-                            $object_manager.remove($object_manager.clusters);
                             $object_manager.add(data);
                             console.log('Map data loaded');
+                            $map.setBounds($map.geoObjects.getBounds(), {
+                                checkZoomRange: true
+                            });
                         })
                         .fail(function() {
                             console.error("Map data error");
@@ -95,10 +91,13 @@
                     }
 
                     $('a.js-map-link').on('click', function() {
-                        load_data('land-tajtsy');
+                        $object_manager.removeAll()
+                        load_data('test');
                     });
 
+
                     $('button.js-map-link').on('click', function() {
+                        $object_manager.removeAll()
                         load_data('land-vsevolozhsk');
                     });
 

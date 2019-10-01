@@ -1,0 +1,407 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1041,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": []
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1042,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1043,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1044,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1045,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1046,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1047,
+      "title": "Земельный участок ИЖС г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1048,
+      "title": "Земельный участок ИЖС город Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1049,
+      "title": "Земельный участок ИЖС город Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1050,
+      "title": "Участок 12  соток ИЖС г. Всеволожск без посредников",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1051,
+      "title": "Земельный участок ИЖС город Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 1052,
+      "title": "Земельный участок ИЖС город Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 999,
+      "title": "Земельный участок ИЖС 12 соток г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 920,
+      "title": "Земельный участок ИЖС 16.58 сотки г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "id": 787,
+      "title": "Земельный участок ИЖС 15 соток г. Всеволожск",
+      "link": "",
+      "options": {
+        "fillColor": "#44A147",
+        "strokeColor": "#18803F",
+        "strokeWidth": 2,
+        "opacity": 0.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          60.021317,
+          30.654084
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      },
+      "project": "vsevolozhsk"
+    }
+  ]
+}

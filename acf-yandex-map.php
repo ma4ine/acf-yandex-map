@@ -27,6 +27,8 @@ function include_field_types_yandex_map( $version = false ) {
 add_action( 'acf/include_field_types', 'include_field_types_yandex_map' );
 add_action( 'acf/register_fields', 'include_field_types_yandex_map' );
 
+/// Include Post 2 JSON
+include_once __DIR__ . '/post-2-json.php';
 
 /// Function for frontend
 
@@ -91,7 +93,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		 * @param array $value Map field value
 		 */
 		$field        = get_field_object( $selector, $post_id );
-		$field_height = $field ? $field['height'] : 200;
+		$field_height = $field ? $field['height'] : 400;
 		$height_map   = apply_filters( 'acf-yandex-map/height', $field_height, $selector, $post_id, $value );
 
 		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%dpx"></div>', $map_id, $height_map );
