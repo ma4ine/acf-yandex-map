@@ -92,7 +92,7 @@
 
                     $('a.js-map-link').on('click', function() {
                         $object_manager.removeAll()
-                        load_data('test');
+                        load_data('data-test');
                     });
 
 

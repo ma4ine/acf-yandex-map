@@ -7,6 +7,7 @@
      */
     var blogURL = acf_yandex_locale.blog_url;
     var templateURL = acf_yandex_locale.template_url;
+    var pluginURL = acf_yandex_locale.plugin_url;
     var postID = acf_yandex_locale.post_id;
     var postType = acf_yandex_locale.post_type;
     var termID = acf_yandex_locale.term_id;
@@ -118,14 +119,13 @@
 
         /// Import data & map init
 
-
-        console.log(data);
-
         if ( (term_slug != 'no-project' && term_slug != undefined) || is_project ) {
 
             console.log('Import start');
 
-            var data = templateURL + '/map/data-land-' + term_slug + '.json';
+            console.log(term_slug);
+
+            var data = pluginURL + 'json/land-' + term_slug + '.json';
 
             $.when(
 
@@ -479,6 +479,8 @@
          * Geocode object address
          */
         function geocode_location(location) {
+
+            console.log(location);
 
             ymaps.geocode(location, {
                 results: 1
