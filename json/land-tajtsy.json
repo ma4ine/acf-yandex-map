@@ -1,1 +1,108 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","postType":"land","project":"tajtsy","id":1187,"title":"\u0423\u0447\u0430\u0441\u0442\u043e\u043a \u0432 \u0422\u0430\u0439\u0446\u0430\u0445","link":"","options":{"fillColor":"#44A147","strokeColor":"#18803F","strokeWidth":2,"opacity":0.75},"geometry":{"type":"Polygon","coordinates":[[[59.65668681799609629479164141230285167694091796875,30.1120047775335564210763550363481044769287109375],[59.65664338342838846074300818145275115966796875,30.11552383576108837814899743534624576568603515625],[59.6554271926164147998861153610050678253173828125,30.115266343695669348790033836849033832550048828125],[59.65534032015082033240105374716222286224365234375,30.112090608222029430862676235847175121307373046875],[59.65668681799609629479164141230285167694091796875,30.1120047775335564210763550363481044769287109375]]]},"properties":{"balloonContentHeader":"<div class=\"module--header\"><div class=\"module--title module--title-available\">\u0423\u0447\u0430\u0441\u0442\u043e\u043a \u2116<\/div><div class=\"module--status status status-nopadding js-status\">\u0421\u0432\u043e\u0431\u043e\u0434\u0435\u043d<\/div><\/div>\"","balloonContentBody":"<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u041f\u043b\u043e\u0449\u0430\u0434\u044c \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/em><\/div><div class=\"common_item--value\">12 \u0441\u043e\u0442.<\/div><\/div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c<\/em><\/div><div class=\"common_item--value\"><span class=\"js-money\">1800000<\/span> \u20bd<\/div><\/div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"><\/i><div class=\"icb--title\"><\/div><\/div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">\u0423\u043a\u043b\u043e\u043d \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/div><img src=\"http:\/\/vsevreestr.localhost\/wp-content\/themes\/vsevreestr\/svg\/landscape\/rovn_NS.svg\" alt=\"\u041b\u0430\u043d\u0434\u0448\u0430\u0444\u0442\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"><\/div><\/div><\/div>\"","balloonContentFooter":"<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435 \u043e\u0431 \u0443\u0447\u0430\u0441\u0442\u043a\u0435<\/a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">\u0417\u0430\u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u0442\u044c<\/button><\/div>\"","hintContent":"\u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u0433. \u0412\u0441\u0435\u0432\u043e\u043b\u043e\u0436\u0441\u043a, \u0448\u043e\u0441\u0441\u0435 \u042e\u0436\u043d\u043e\u0435"}},{"type":"Feature","postType":"land","project":"tajtsy","id":261,"title":"\u0423\u0447\u0430\u0441\u0442\u043e\u043a, 10,2 \u0441\u043e\u0442\u043a\u0438, \u0422\u0430\u0439\u0446\u044b, \u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c","link":"","options":{"fillColor":"#44A147","strokeColor":"#18803F","strokeWidth":2,"opacity":0.75},"geometry":{"type":"Polygon","coordinates":[[[59.658929867667126245578401722013950347900390625,30.11399275221231874866134603507816791534423828125],[59.65827838694797691232452052645385265350341796875,30.115451873916416758447667234577238559722900390625],[59.65684508466432589557371102273464202880859375,30.1128769532621163307339884340763092041015625],[59.65823495444850976809902931563556194305419921875,30.111246170181050985092952032573521137237548828125],[59.658929867667126245578401722013950347900390625,30.11399275221231874866134603507816791534423828125]]]},"properties":{"balloonContentHeader":"<div class=\"module--header\"><div class=\"module--title module--title-available\">\u0423\u0447\u0430\u0441\u0442\u043e\u043a \u2116<\/div><div class=\"module--status status status-nopadding js-status\">\u0421\u0432\u043e\u0431\u043e\u0434\u0435\u043d<\/div><\/div>\"","balloonContentBody":"<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u041f\u043b\u043e\u0449\u0430\u0434\u044c \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/em><\/div><div class=\"common_item--value\">12 \u0441\u043e\u0442.<\/div><\/div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c<\/em><\/div><div class=\"common_item--value\"><span class=\"js-money\">1800000<\/span> \u20bd<\/div><\/div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"><\/i><div class=\"icb--title\"><\/div><\/div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">\u0423\u043a\u043b\u043e\u043d \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/div><img src=\"http:\/\/vsevreestr.localhost\/wp-content\/themes\/vsevreestr\/svg\/landscape\/rovn_NS.svg\" alt=\"\u041b\u0430\u043d\u0434\u0448\u0430\u0444\u0442\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"><\/div><\/div><\/div>\"","balloonContentFooter":"<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435 \u043e\u0431 \u0443\u0447\u0430\u0441\u0442\u043a\u0435<\/a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">\u0417\u0430\u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u0442\u044c<\/button><\/div>\"","hintContent":"\u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u0433. \u0412\u0441\u0435\u0432\u043e\u043b\u043e\u0436\u0441\u043a, \u0448\u043e\u0441\u0441\u0435 \u042e\u0436\u043d\u043e\u0435"}},{"type":"Feature","postType":"land","project":"tajtsy","id":196,"title":"\u0423\u0447\u0430\u0441\u0442\u043e\u043a 10 \u0441\u043e\u0442\u043e\u043a \u0418\u0416\u0421, \u043f\u0433\u0442 \u0422\u0430\u0439\u0446\u044b","link":"","options":{"fillColor":"#44A147","strokeColor":"#18803F","strokeWidth":2,"opacity":0.75},"geometry":{"type":"Point","coordinates":[59.65700621665931890902356826700270175933837890625,30.1153997501772892064764164388179779052734375]},"properties":{"balloonContentHeader":"<div class=\"module--header\"><div class=\"module--title module--title-available\">\u0423\u0447\u0430\u0441\u0442\u043e\u043a \u2116<\/div><div class=\"module--status status status-nopadding js-status\">\u0421\u0432\u043e\u0431\u043e\u0434\u0435\u043d<\/div><\/div>\"","balloonContentBody":"<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u041f\u043b\u043e\u0449\u0430\u0434\u044c \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/em><\/div><div class=\"common_item--value\">12 \u0441\u043e\u0442.<\/div><\/div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c<\/em><\/div><div class=\"common_item--value\"><span class=\"js-money\">1800000<\/span> \u20bd<\/div><\/div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"><\/i><div class=\"icb--title\"><\/div><\/div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">\u0423\u043a\u043b\u043e\u043d \u0443\u0447\u0430\u0441\u0442\u043a\u0430<\/div><img src=\"http:\/\/vsevreestr.localhost\/wp-content\/themes\/vsevreestr\/svg\/landscape\/rovn_NS.svg\" alt=\"\u041b\u0430\u043d\u0434\u0448\u0430\u0444\u0442\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"><\/div><\/div><\/div>\"","balloonContentFooter":"<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435 \u043e\u0431 \u0443\u0447\u0430\u0441\u0442\u043a\u0435<\/a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">\u0417\u0430\u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u0442\u044c<\/button><\/div>\"","hintContent":"\u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u0433. \u0412\u0441\u0435\u0432\u043e\u043b\u043e\u0436\u0441\u043a, \u0448\u043e\u0441\u0441\u0435 \u042e\u0436\u043d\u043e\u0435"}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "postType": "land",
+      "project": "tajtsy",
+      "id": 1187,
+      "title": "Участок в Тайцах",
+      "link": "",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              59.656686817996096,
+              30.112004777533556
+            ],
+            [
+              59.65664338342839,
+              30.11552383576109
+            ],
+            [
+              59.655427192616415,
+              30.11526634369567
+            ],
+            [
+              59.65534032015082,
+              30.11209060822203
+            ],
+            [
+              59.656686817996096,
+              30.112004777533556
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      }
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "project": "tajtsy",
+      "id": 261,
+      "title": "Участок, 10,2 сотки, Тайцы, Ленинградская область",
+      "link": "",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              59.658929867667126,
+              30.11399275221232
+            ],
+            [
+              59.65827838694798,
+              30.115451873916417
+            ],
+            [
+              59.656845084664326,
+              30.112876953262116
+            ],
+            [
+              59.65823495444851,
+              30.11124617018105
+            ],
+            [
+              59.658929867667126,
+              30.11399275221232
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      }
+    },
+    {
+      "type": "Feature",
+      "postType": "land",
+      "project": "tajtsy",
+      "id": 196,
+      "title": "Участок 10 соток ИЖС, пгт Тайцы",
+      "link": "",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          59.65698037742697,
+          30.11521106820201
+        ]
+      },
+      "properties": {
+        "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
+        "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
+        "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
+        "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
+      }
+    }
+  ]
+}

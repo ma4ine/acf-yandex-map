@@ -2,6 +2,16 @@
 
     // 'use strict';
 
+    /**
+     * Include common vars
+     */
+    //= 'includes/common.js'
+
+    /**
+     * Backend vars
+     */
+    // ...maybe
+
     ymaps.ready(function () {
 
         var $maps = $('.yandex-map');
@@ -26,6 +36,7 @@
                 $map.controls.remove('searchControl');
                 $map.controls.remove('geolocationControl');
 
+                // Object map (need test)!
                 if ($params.marks != undefined) {
                    
                     $($params.marks).each(function (index, mark) {
@@ -60,14 +71,24 @@
 
                 }
 
-
+                // Main map
                 if (id === 'ymap_full') {
 
                     $object_manager = new ymaps.ObjectManager({
                         // doesn't works with polygon
                         // clusterize: true,
                         // gridSize: 32
+
+                        // не работает
+                        // "fillColor": "#44A147",
+                        // "strokeColor": "#18803F",
+                        // "strokeWidth": 2,
+                        // "opacity": 0.75
                     });
+
+                    $object_manager.objects.options.set('preset', 'islands#grayIcon');
+
+
 
                     function load_data(data_type) {
 
@@ -92,13 +113,13 @@
 
                     $('a.js-map-link').on('click', function() {
                         $object_manager.removeAll()
-                        load_data('data-test');
+                        load_data('land-vsevolozhsk');
                     });
 
 
                     $('button.js-map-link').on('click', function() {
                         $object_manager.removeAll()
-                        load_data('land-vsevolozhsk');
+                        load_data('land-tajtsy');
                     });
 
                 }

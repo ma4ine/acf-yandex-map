@@ -83,13 +83,11 @@ function ymaps_json_post()
 			// $object['link'] = get_the_permalink();
 
 			// d(get_field('ymap', $post_id));
+
 			$ymap = json_decode( get_field('ymap', $post_id), true );
 
-			// d($ymap);
 
-			// continue;
-
-			if ( isset($ymap['marks'][0]) ) {
+			if ( isset($ymap['marks'][0]) && !empty($ymap['marks'][0]['coords'][0]) ) {
 
 				$object['geometry']['type'] = $ymap['marks'][0]['type'];
 
@@ -102,9 +100,9 @@ function ymaps_json_post()
 					$object['geometry']['coordinates'] = $ymap['marks'][0]['coords'];
 
 				}
-			}
 
-			$collection['features'][] = $object;
+				$collection['features'][] = $object;
+			}
 		}
 
 		// wp_die();
