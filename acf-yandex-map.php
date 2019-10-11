@@ -83,6 +83,10 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 			'plugin_url' => plugin_dir_url( __FILE__ ),
 		) );
 
+		wp_localize_script( 'yandex-map-frontend', 'yandex_locale', array(
+			'plugin_url' => plugin_dir_url( __FILE__ ),
+		) );
+
 		/**
 		 * Filter the map height for frontend.
 		 *

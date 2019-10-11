@@ -2,16 +2,16 @@
 
 var mark_style_house_green = {
     iconLayout: 'default#image',
-    iconImageHref: '../svg/map/mark-house-2.svg',
+    iconImageHref: plugin_url + 'svg/mark-house-2.svg',
     iconImageSize: [36, 36],
-    iconImageOffset: [-6, -18]
+    iconImageOffset: [-18, -36]
 };
 
 var mark_style_house_orange = {
     iconLayout: 'default#image',
-    iconImageHref: '../svg/map/mark-house-1.svg',
+    iconImageHref: plugin_url + 'svg/mark-house-1.svg',
     iconImageSize: [36, 36],
-    iconImageOffset: [-6, -18]
+    iconImageOffset: [-18, -36]
 };
 
 var polygon_style_green = {

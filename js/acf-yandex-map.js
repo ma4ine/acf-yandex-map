@@ -3,6 +3,11 @@
     'use strict';
 
     /**
+     * Plugin url
+     */
+    var plugin_url = acf_yandex_locale.plugin_url;
+
+    /**
      * Include common vars
      */
     //= 'includes/common.js'
@@ -12,7 +17,6 @@
      */
     var blogURL = acf_yandex_locale.blog_url;
     var templateURL = acf_yandex_locale.template_url;
-    var pluginURL = acf_yandex_locale.plugin_url;
     var postID = acf_yandex_locale.post_id;
     var postType = acf_yandex_locale.post_type;
     var termID = acf_yandex_locale.term_id;
@@ -102,7 +106,7 @@
 
             console.log(term_slug);
 
-            var data = pluginURL + 'json/land-' + term_slug + '.json';
+            var data = plugin_url + 'json/land-' + term_slug + '.json';
 
             $.when(
 
@@ -325,7 +329,7 @@
             } else if (marker_type == 'polygon') {
 
                 place_mark = new ymaps.Polygon(
-                    [coords],
+                    coords,
                     place_mark_content,
                     polygon_style_orange
                 );
