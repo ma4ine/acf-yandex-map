@@ -89,10 +89,79 @@
 
                     // load baloon data
                     // Функция, эмулирующая запрос за данными на сервер.
-                    function loadBalloonData (objectId) {
+                    // function loadBalloonData(objectId) {
+                    //     var dataDeferred = ymaps.vow.defer();
+                    //     function resolveData () {
+                    //         dataDeferred.resolve('Данные балуна');
+                    //     }
+                    //     window.setTimeout(resolveData, 1000);
+                    //     return dataDeferred.promise();
+                    // }
+                    function loadBalloonData(objectId) {
                         var dataDeferred = ymaps.vow.defer();
                         function resolveData () {
-                            dataDeferred.resolve('Данные балуна');
+
+                            var var1 = '123123';
+                            var var2 = '123123';
+                            var var3 = '123123';
+                            var var4 = '#';
+                            var var5 = '123123';
+                            var var6 = '123123';
+                            var var7 = '123123';
+
+
+                            $.get({
+                                url: yandex_locale.ajax_url,
+                                // dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+                                data: {
+                                    action: 'ymap_object_load',
+                                    nonce_code : yandex_locale.nonce,
+                                    post_id: '1323213'
+                                }
+                            })
+                            .done(function() {
+                                console.log("success");
+                            })
+                            .fail(function() {
+                                console.log("error");
+                            })
+                            .always(function() {
+                                console.log("complete");
+                            });
+                            
+
+                            var baloon = 
+                                '<div class="module--header">' +
+                                    '<div class="module--title">' +
+                                        '<div class="module--suptitle">' + var1 + '</div>' +
+                                        var2 +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="module--body">' +
+                                    '<div class="module--item icb">' +
+                                        '<i class="icb--icon icon icon-location"></i>' +
+                                        '<div class="icb--title">' + var3 + '</div>' +
+                                    '</div>' +
+                                    '<div class="module--item module--item-50">' +
+                                        '<img src="' + var4 + '" alt="Фото" class="module--pic">' +
+                                    '</div>' +
+                                    '<div class="module--item module--item-50">' +
+                                        '<div class="common_item">' +
+                                            '<div class="common_item--title"><em>Площадь</em></div>' +
+                                            '<div class="common_item--value">' + var5 + '</div>' +
+                                        '</div>' +
+                                        '<div class="common_item">' +
+                                            '<div class="common_item--title"><em>Стоимость</em></div>' +
+                                            '<div class="common_item--value"><span class="js-money">' + var6 + '</span> ₽</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="module--footer module--footer-center">' +
+                                    '<a href="' + var7 + '" class="module--but but but-green">Подробнее</a>' +
+                                '</div>';
+
+
+                            dataDeferred.resolve(baloon);
                         }
                         window.setTimeout(resolveData, 1000);
                         return dataDeferred.promise();

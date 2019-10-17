@@ -28,6 +28,7 @@ add_action( 'acf/include_field_types', 'include_field_types_yandex_map' );
 add_action( 'acf/register_fields', 'include_field_types_yandex_map' );
 
 /// Include Post 2 JSON
+
 include_once __DIR__ . '/post-2-json.php';
 
 /// Function for frontend
@@ -42,7 +43,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 	function the_yandex_map( $selector, $post_id = false, $data = null ) {
 
 		// Config
-		if (true) {
+		if ( WP_DEBUG && WP_DEBUG_DISPLAY ) {
 			$debug = 'mode=debug';
 		} else {
 			$debug = 'mode=release';
@@ -85,6 +86,8 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 
 		wp_localize_script( 'yandex-map-frontend', 'yandex_locale', array(
 			'plugin_url' => plugin_dir_url( __FILE__ ),
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'nonce' => wp_create_nonce('myajax-nonce'),
 		) );
 
 		/**
@@ -103,4 +106,20 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%dpx"></div>', $map_id, $height_map );
 	}
 
+}
+
+/// AJAX for front-end
+add_action('wp_ajax_ymap_object_load', 'ymap_object_load_callback');
+add_action('wp_ajax_nopriv_ymap_object_load', 'ymap_object_load_callback');
+function ymap_object_load_callback()
+{
+	check_ajax_referer( 'myajax-nonce', 'nonce_code' );
+
+	if ( !isset($_GET['post_id']) || empty($_GET['post_id']) ) wp_die();
+
+	$data = $_GET['post_id'];
+
+	echo $data;
+
+	wp_die();
 }
