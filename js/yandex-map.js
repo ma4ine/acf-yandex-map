@@ -87,50 +87,21 @@
                     var object_style = Object.assign( {}, mark_style_house_orange, polygon_style_green );
                     $object_manager.objects.options.set(object_style);
 
-                    // load baloon data
-                    // Функция, эмулирующая запрос за данными на сервер.
-                    // function loadBalloonData(objectId) {
-                    //     var dataDeferred = ymaps.vow.defer();
-                    //     function resolveData () {
-                    //         dataDeferred.resolve('Данные балуна');
-                    //     }
-                    //     window.setTimeout(resolveData, 1000);
-                    //     return dataDeferred.promise();
-                    // }
-                    function loadBalloonData(objectId) {
-                        var dataDeferred = ymaps.vow.defer();
-                        function resolveData () {
+                    function compileBaloonData(objectData) {
 
-                            var var1 = '123123';
-                            var var2 = '123123';
-                            var var3 = '123123';
-                            var var4 = '#';
-                            var var5 = '123123';
-                            var var6 = '123123';
-                            var var7 = '123123';
+                        console.log(objectData);
 
+                        if (!objectData) return 'Ошибка!';
 
-                            $.get({
-                                url: yandex_locale.ajax_url,
-                                // dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-                                data: {
-                                    action: 'ymap_object_load',
-                                    nonce_code : yandex_locale.nonce,
-                                    post_id: '1323213'
-                                }
-                            })
-                            .done(function() {
-                                console.log("success");
-                            })
-                            .fail(function() {
-                                console.log("error");
-                            })
-                            .always(function() {
-                                console.log("complete");
-                            });
-                            
+                        var var1 = '123123';
+                        var var2 = '123123';
+                        var var3 = '123123';
+                        var var4 = '#';
+                        var var5 = '123123';
+                        var var6 = '123123';
+                        var var7 = '123123';
 
-                            var baloon = 
+                        var baloonData = 
                                 '<div class="module--header">' +
                                     '<div class="module--title">' +
                                         '<div class="module--suptitle">' + var1 + '</div>' +
@@ -159,11 +130,34 @@
                                 '<div class="module--footer module--footer-center">' +
                                     '<a href="' + var7 + '" class="module--but but but-green">Подробнее</a>' +
                                 '</div>';
+                        
+                        return baloonData;
+                    }
 
 
-                            dataDeferred.resolve(baloon);
-                        }
-                        window.setTimeout(resolveData, 1000);
+                    function loadBalloonData(objectId, postId) {
+
+                        var dataDeferred = ymaps.vow.defer();
+
+                        $.get({
+                            url: yandex_locale.ajax_url,
+                            data: {
+                                action: 'ymap_object_load',
+                                nonce_code : yandex_locale.nonce,
+                                post_id: postId
+                            }
+                        })
+                        .done(function(data) {
+                            console.log("Object data loaded");
+                            // console.log(data);
+                            var baloonData = compileBaloonData(data);
+                            dataDeferred.resolve(baloonData);
+                        })
+                        .fail(function() {
+                            console.error('Object data error');
+                            dataDeferred.resolve('Ошибка!');
+                        });
+                            
                         return dataDeferred.promise();
                     }
 
@@ -173,16 +167,19 @@
 
                     $object_manager.objects.events.add('click', function (e) {
                         var objectId = e.get('objectId'),
-                            obj = $object_manager.objects.getById(objectId);
+                            obj = $object_manager.objects.getById(objectId),
+                            postId = obj.id;
                         if (hasBalloonData(objectId)) {
                             $object_manager.objects.balloon.open(objectId);
                         } else {
                             obj.properties.balloonContent = "Идет загрузка данных...";
                             $object_manager.objects.balloon.open(objectId);
-                            loadBalloonData(objectId).then(function (data) {
+
+                            loadBalloonData(objectId, postId).then(function (data) {
                                 obj.properties.balloonContent = data;
                                 $object_manager.objects.balloon.setData(obj);
                             });
+
                         }
                     });
                     //

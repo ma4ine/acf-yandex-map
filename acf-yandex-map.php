@@ -87,7 +87,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		wp_localize_script( 'yandex-map-frontend', 'yandex_locale', array(
 			'plugin_url' => plugin_dir_url( __FILE__ ),
 			'ajax_url' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('myajax-nonce'),
+			'nonce' => wp_create_nonce('ajax-nonce'),
 		) );
 
 		/**
@@ -108,18 +108,41 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 
 }
 
+function get_object_data($post_id)
+{
+	$post = array();
+
+	get_the_ID();
+
+	$args = array(
+		''
+	);
+
+	get_posts($args);
+
+	return $post;
+}
+
 /// AJAX for front-end
 add_action('wp_ajax_ymap_object_load', 'ymap_object_load_callback');
 add_action('wp_ajax_nopriv_ymap_object_load', 'ymap_object_load_callback');
 function ymap_object_load_callback()
 {
-	check_ajax_referer( 'myajax-nonce', 'nonce_code' );
+	check_ajax_referer( 'ajax-nonce', 'nonce_code' );
 
-	if ( !isset($_GET['post_id']) || empty($_GET['post_id']) ) wp_die();
+	if ( isset($_GET['post_id']) && !empty($_GET['post_id']) ) {
 
-	$data = $_GET['post_id'];
+		$post_data = get_object_data($_GET['post_id']);
 
-	echo $data;
+		$post_json = json_encode($post_data);
 
-	wp_die();
+		echo $post_json;
+
+		wp_die();
+
+	} else { 
+
+		wp_die(); 
+
+	}
 }
