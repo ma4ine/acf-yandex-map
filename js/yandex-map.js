@@ -80,123 +80,100 @@
                         // gridSize: 32
 
                         // disable default baloon
-                        geoObjectOpenBalloonOnClick: false
+                        geoObjectOpenBalloonOnClick: false,
                     });
 
                     // set common style
                     var object_style = Object.assign( {}, mark_style_house_orange, polygon_style_green );
                     $object_manager.objects.options.set(object_style);
 
-                    function compileBaloonData(objectData) {
+                    function compile_baloon_data(object_json) {
 
-                        console.log(objectData);
+                        if (!object_json) return 'Ошибка!';
 
-                        if (!objectData) return 'Ошибка!';
+                        var object = $.parseJSON(object_json);
 
-                        var var1 = '123123';
-                        var var2 = '123123';
-                        var var3 = '123123';
-                        var var4 = '#';
-                        var var5 = '123123';
-                        var var6 = '123123';
-                        var var7 = '123123';
-
-                        var baloonData = 
+                        var baloon_data = 
                                 '<div class="module--header">' +
                                     '<div class="module--title">' +
-                                        '<div class="module--suptitle">' + var1 + '</div>' +
-                                        var2 +
+                                        '<div class="module--suptitle">' + object.offer_type + '</div>' +
+                                        object.title +
                                     '</div>' +
                                 '</div>' +
                                 '<div class="module--body">' +
                                     '<div class="module--item icb">' +
                                         '<i class="icb--icon icon icon-location"></i>' +
-                                        '<div class="icb--title">' + var3 + '</div>' +
+                                        '<div class="icb--title">' + object.location + '</div>' +
                                     '</div>' +
                                     '<div class="module--item module--item-50">' +
-                                        '<img src="' + var4 + '" alt="Фото" class="module--pic">' +
+                                        '<img src="' + object.thumb_url + '" alt="Фото участка" class="module--pic">' +
                                     '</div>' +
                                     '<div class="module--item module--item-50">' +
                                         '<div class="common_item">' +
                                             '<div class="common_item--title"><em>Площадь</em></div>' +
-                                            '<div class="common_item--value">' + var5 + '</div>' +
+                                            '<div class="common_item--value">' + object.square + '</div>' +
                                         '</div>' +
                                         '<div class="common_item">' +
                                             '<div class="common_item--title"><em>Стоимость</em></div>' +
-                                            '<div class="common_item--value"><span class="js-money">' + var6 + '</span> ₽</div>' +
+                                            '<div class="common_item--value">' + object.price + ' ₽</div>' +
                                         '</div>' +
                                     '</div>' +
                                 '</div>' +
                                 '<div class="module--footer module--footer-center">' +
-                                    '<a href="' + var7 + '" class="module--but but but-green">Подробнее</a>' +
+                                    '<a href="' + object.link + '" class="module--but but but-green">Подробнее</a>' +
                                 '</div>';
                         
-                        return baloonData;
+                        return baloon_data;
                     }
 
 
-                    function loadBalloonData(objectId, postId) {
+                    function load_balloon_data(object_id, post_id) {
 
-                        var dataDeferred = ymaps.vow.defer();
+                        var deferred = ymaps.vow.defer();
 
                         $.get({
                             url: yandex_locale.ajax_url,
                             data: {
                                 action: 'ymap_object_load',
-                                nonce_code : yandex_locale.nonce,
-                                post_id: postId
+                                nonce_code: yandex_locale.nonce,
+                                post_id: post_id,
                             }
                         })
                         .done(function(data) {
                             console.log("Object data loaded");
-                            // console.log(data);
-                            var baloonData = compileBaloonData(data);
-                            dataDeferred.resolve(baloonData);
+                            var baloon_data = compile_baloon_data(data);
+                            deferred.resolve(baloon_data);
                         })
                         .fail(function() {
                             console.error('Object data error');
-                            dataDeferred.resolve('Ошибка!');
+                            deferred.resolve('Ошибка!');
                         });
                             
-                        return dataDeferred.promise();
+                        return deferred.promise();
                     }
 
-                    function hasBalloonData(objectId) {
-                        return $object_manager.objects.getById(objectId).properties.balloonContent;
+                    function has_balloon_data(object_id) {
+                        return $object_manager.objects.getById(object_id).properties.balloonContent;
                     }
 
                     $object_manager.objects.events.add('click', function (e) {
-                        var objectId = e.get('objectId'),
-                            obj = $object_manager.objects.getById(objectId),
+                        var object_id = e.get('objectId'),
+                            obj = $object_manager.objects.getById(object_id),
                             postId = obj.id;
-                        if (hasBalloonData(objectId)) {
-                            $object_manager.objects.balloon.open(objectId);
+                        if (has_balloon_data(object_id)) {
+                            $object_manager.objects.balloon.open(object_id);
                         } else {
                             obj.properties.balloonContent = "Идет загрузка данных...";
-                            $object_manager.objects.balloon.open(objectId);
+                            $object_manager.objects.balloon.open(object_id);
 
-                            loadBalloonData(objectId, postId).then(function (data) {
+                            load_balloon_data(object_id, postId).then(function (data) {
                                 obj.properties.balloonContent = data;
                                 $object_manager.objects.balloon.setData(obj);
                             });
 
                         }
                     });
-                    //
-
-                        /// js sample
-                      // "properties": {
-                      //   "balloonContentHeader": "<div class=\"module--header\"><div class=\"module--title module--title-available\">Участок №</div><div class=\"module--status status status-nopadding js-status\">Свободен</div></div>\"",
-                      //   "balloonContentBody": "<div class=\"module--body\"><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Площадь участка</em></div><div class=\"common_item--value\">12 сот.</div></div><div class=\"module--item module--item-50 common_item\"><div class=\"common_item--title\"><em>Стоимость</em></div><div class=\"common_item--value\"><span class=\"js-money\">1800000</span> ₽</div></div><div class=\"module--item icb d-none d-lg-block\"><i class=\"icb--icon icon icon-mountain\"></i><div class=\"icb--title\"></div></div><div class=\"module--item slope slope-hor d-none d-lg-flex\"><div class=\"slope--title slope--title-hor\">Уклон участка</div><img src=\"http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg\" alt=\"Ландшафт\" class=\"slope--img slope--img-hor\"><div class=\"slope--subtitle slope--subtitle-hor js-typo\"></div></div></div>\"",
-                      //   "balloonContentFooter": "<div class=\"module--footer\"><a href=\"#\" class=\"module--more\">Подробнее об участке</a><button type=\"button\" class=\"module--but but but-green\" data-toggle=\"modal\" data-target=\"#orderModal\">Забронировать</button></div>\"",
-                      //   "hintContent": "Ленинградская область, г. Всеволожск, шоссе Южное"
-                      // }
-
-                    /// php sample
-                    // 'balloonContentHeader' => '<div class="module--header"><div class="module--title module--title-available">Участок №</div><div class="module--status status status-nopadding js-status">Свободен</div></div>"',
-                    // 'balloonContentBody' => '<div class="module--body"><div class="module--item module--item-50 common_item"><div class="common_item--title"><em>Площадь участка</em></div><div class="common_item--value">12 сот.</div></div><div class="module--item module--item-50 common_item"><div class="common_item--title"><em>Стоимость</em></div><div class="common_item--value"><span class="js-money">1800000</span> ₽</div></div><div class="module--item icb d-none d-lg-block"><i class="icb--icon icon icon-mountain"></i><div class="icb--title"></div></div><div class="module--item slope slope-hor d-none d-lg-flex"><div class="slope--title slope--title-hor">Уклон участка</div><img src="http://vsevreestr.localhost/wp-content/themes/vsevreestr/svg/landscape/rovn_NS.svg" alt="Ландшафт" class="slope--img slope--img-hor"><div class="slope--subtitle slope--subtitle-hor js-typo"></div></div></div>"',
-                    // 'balloonContentFooter' => '<div class="module--footer"><a href="#" class="module--more">Подробнее об участке</a><button type="button" class="module--but but but-green" data-toggle="modal" data-target="#orderModal">Забронировать</button></div>"',
-
+                    
                     // load objects
                     function load_objects(data_type) {
 

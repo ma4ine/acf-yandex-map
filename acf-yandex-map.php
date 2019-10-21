@@ -110,17 +110,50 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 
 function get_object_data($post_id)
 {
-	$post = array();
+	$post_status = get_post_status($post_id);
 
-	get_the_ID();
+	if ( $post_status === 'publish' ) {
 
-	$args = array(
-		''
-	);
+		$plugin_url = plugin_dir_url( __FILE__ );
 
-	get_posts($args);
+		$dim = array(
+			'land' => ' сот.',
+			'living' => ' м<sup>2</sup>',
+			'commercial' => ' м<sup>2</sup>',
+		);
 
-	return $post;
+		$post = array();
+
+		$post_type = get_post_type($post_id);
+		$square = get_field($post_type . '-square', $post_id) . $dim[$post_type];
+		$city = get_field('location-city', $post_id);
+		$location_arr = array(
+			'district' => get_field('location-district', $post_id),
+			'city' => (is_object($city)) ? $city->name : $city,
+			'address' => get_field('location-address', $post_id),
+		);
+		$location = implode(', ', $location_arr);
+		$price = number_format(get_field('price', $post_id), 0, '', ' ');
+		$images = get_field('gallery', $post_id);
+		$thumb_url = ($images) 
+			? $images[0]['sizes']['thumbnail']
+			: $plugin_url . 'svg/house-1.svg';
+
+		$post['title'] = get_the_title($post_id);
+		$post['link'] = get_permalink($post_id);
+		$post['square'] = $square;
+		$post['offer_type'] = get_field('offer-type', $post_id);
+		$post['location'] = $location;
+		$post['price'] = $price;
+		$post['thumb_url'] = $thumb_url;
+
+		return $post;
+		
+	} else {
+
+		return false;
+
+	}
 }
 
 /// AJAX for front-end
@@ -133,6 +166,8 @@ function ymap_object_load_callback()
 	if ( isset($_GET['post_id']) && !empty($_GET['post_id']) ) {
 
 		$post_data = get_object_data($_GET['post_id']);
+
+		if (!$post_data) wp_die();
 
 		$post_json = json_encode($post_data);
 
