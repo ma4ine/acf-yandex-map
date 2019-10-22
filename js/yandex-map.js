@@ -35,6 +35,7 @@
                 $map.controls.remove('trafficControl');
                 $map.controls.remove('searchControl');
                 $map.controls.remove('geolocationControl');
+                $map.options.set('balloonMaxWidth', 290);
 
                 // Object map (need test)!
                 if ($params.marks != undefined) {
@@ -179,10 +180,13 @@
 
                         $map.geoObjects.add($object_manager);
 
-                        var plugin_url = window[id]['plugin_url'];
-
-                        $.ajax({
-                            url: plugin_url + 'json/' + data_type + '.json'
+                        $.post({
+                            url: yandex_locale.ajax_url,
+                            data: {
+                                action: 'ymaps_json_post',
+                                nonce_code: yandex_locale.nonce,
+                                data: 'test'
+                            }
                         })
                         .done(function(data) {
                             $object_manager.add(data);
@@ -196,15 +200,16 @@
                         });
                     }
 
-                    $('a.js-map-link').on('click', function() {
-                        $object_manager.removeAll()
-                        load_objects('land-vsevolozhsk');
-                    });
+                    $('.js-map-link').on('click', function() {
 
-
-                    $('button.js-map-link').on('click', function() {
                         $object_manager.removeAll()
-                        load_objects('land-tajtsy');
+
+                        // var jsons = [
+                        //     'land-vsevolozhsk',
+                        //     'land-tajtsy'
+                        // ];
+
+                        load_objects();
                     });
 
                 }

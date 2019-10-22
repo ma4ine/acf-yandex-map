@@ -27,10 +27,6 @@ function include_field_types_yandex_map( $version = false ) {
 add_action( 'acf/include_field_types', 'include_field_types_yandex_map' );
 add_action( 'acf/register_fields', 'include_field_types_yandex_map' );
 
-/// Include Post 2 JSON
-
-include_once __DIR__ . '/post-2-json.php';
-
 /// Function for frontend
 
 if ( ! function_exists( 'the_yandex_map' ) ) {
@@ -157,6 +153,105 @@ function get_object_data($post_id)
 }
 
 /// AJAX for front-end
+
+// Object list
+// Post objects to JSON, AJAX!
+add_action( 'wp_ajax_ymaps_json_post', 'ymaps_json_post_callback', 10 );
+add_action( 'wp_ajax_nopriv_ymaps_json_post', 'ymaps_json_post_callback', 10 );
+function ymaps_json_post_callback()
+{
+	check_ajax_referer( 'ajax-nonce', 'nonce_code' );
+
+	if ( !isset($_POST['data']) || empty($_POST['data']) ) wp_die();
+
+	$post_type = array('land', 'living', 'commercial');
+
+	$collection = array(
+		'type' => 'FeatureCollection',
+		'features' => array(),
+	);
+
+	$args = array(
+		'numberposts' => -1, 
+		'post_type' => $post_type,
+	);
+
+	// $project = ( get_the_terms( $post_id, 'project' ) ) ?: 'no-project';
+
+	// if ( $post_type === 'land' && $project != 'no-project' ) {
+
+	// 	$project = $project[0]->slug;
+
+	// 	$add_args = array(
+	// 		'project' => $project,
+	// 	);
+
+	// } else {
+
+	// 	$add_args = array(
+	// 		// nothing
+	// 	);
+
+	// }
+
+	// $args = array_merge($base_args, $add_args);
+
+	$posts = get_posts( $args );
+
+	if ( $posts ) {
+
+		foreach ( $posts as $post ) {
+
+			setup_postdata( $post );
+
+			$post_id = $post->ID;
+
+			$object = array(
+				'type' => 'Feature',
+				// 'postType' => $post_type,
+				// 'project' => $project,
+				'id' => $post_id,
+				'title' => $post->post_title,
+				// 'link' => '',
+				'geometry' => array(
+					'type' => '',
+					'coordinates' => array(),
+				),
+				'properties' => array(
+		      'hintContent' => $post->post_title,
+				)
+			);
+
+			$ymap = json_decode( get_field('ymap', $post_id), true );
+
+			if ( isset($ymap['marks'][0]) && !empty($ymap['marks'][0]['coords'][0]) ) {
+
+				$object['geometry']['type'] = $ymap['marks'][0]['type'];
+
+				if ( $object['geometry']['type'] === 'Polygon' ) {
+
+					$object['geometry']['coordinates'][] = $ymap['marks'][0]['coords'][0];
+
+				} elseif ( $object['geometry']['type'] === 'Point' ) {
+
+					$object['geometry']['coordinates'] = $ymap['marks'][0]['coords'];
+				}
+
+				$collection['features'][] = $object;
+			}
+		}
+
+		wp_reset_postdata();
+	}
+	
+	$json = json_encode($collection);
+
+	echo $json;
+
+	wp_die();
+}
+
+// Data for baloon
 add_action('wp_ajax_ymap_object_load', 'ymap_object_load_callback');
 add_action('wp_ajax_nopriv_ymap_object_load', 'ymap_object_load_callback');
 function ymap_object_load_callback()
