@@ -257,14 +257,35 @@
                     };
                 });
                 // get address
-                var location = 
-                    $('[data-name="location-district"] input').val() + ' ' +
-                    $('[data-name="location-city"] select option[selected="selected"]').text() + ' ' + 
-                    $('[data-name="location-address"] input').val();
-                // use gecoder
-                geocode_location(location);
-                // save map
-                save_map();
+                var location;
+
+                function location_str(el) {
+                    if (el) {
+                        console.log(el);
+                        location += el; 
+                        location += ' '; 
+                    }
+                }
+
+                // location_str($('[data-name="location-district"] input').val());
+                // location_str($('[data-name="location-city"] select option[selected="selected"]').text());
+                // location_str($('[data-name="location-address"] input').val());
+                location_str($('.js-location').find('textarea').text());
+
+
+                // var location = 
+                //     $('[data-name="location-district"] input').val() + ' ' +
+                //     $('[data-name="location-city"] select option[selected="selected"]').text() + ' ' + 
+                //     $('[data-name="location-address"] input').val();
+
+                if ( location ) {
+                    // use gecoder
+                    geocode_location(location);
+                    // save map
+                    save_map();
+                } else {
+                    alert('Объект не найден');
+                };
             });
 
             if (!is_project) {
