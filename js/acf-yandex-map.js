@@ -256,33 +256,24 @@
                         $map.geoObjects.remove(mark);
                     };
                 });
+
                 // get address
-                var location;
+                var location = '';
 
-                function location_str(el) {
-                    if (el) {
-                        console.log(el);
-                        location += el; 
-                        location += ' '; 
+                $('.js-location').each(function(index, el) {
+                    function collect(el) {
+                        if (el != undefined && el != NaN && el != null && el) {
+                            location += el;
+                        }
                     }
-                }
-
-                // location_str($('[data-name="location-district"] input').val());
-                // location_str($('[data-name="location-city"] select option[selected="selected"]').text());
-                // location_str($('[data-name="location-address"] input').val());
-                location_str($('.js-location').find('textarea').text());
-
-
-                // var location = 
-                //     $('[data-name="location-district"] input').val() + ' ' +
-                //     $('[data-name="location-city"] select option[selected="selected"]').text() + ' ' + 
-                //     $('[data-name="location-address"] input').val();
+                    collect($(el).find('textarea').val());
+                    collect($(el).find('input').val());
+                    collect($(el).find('select option[selected="selected"]').text());
+                });
 
                 if ( location ) {
                     // use gecoder
                     geocode_location(location);
-                    // save map
-                    save_map();
                 } else {
                     alert('Объект не найден');
                 };
@@ -465,7 +456,7 @@
                     var _type = mark.geometry.getType();
                     marks.push({
                         id: postID,
-                        content: postID,
+                        content: content,
                         type: _type,
                         coords: mark.geometry.getCoordinates()
                     });
@@ -482,20 +473,21 @@
          */
         function geocode_location(location) {
 
-            console.log(location);
-
             ymaps.geocode(location, {
                 results: 1
             }).then(function (res) {
                 var geo_object = res.geoObjects.get(0);
                 var coords = geo_object.geometry.getCoordinates();
                 var bounds = geo_object.properties.get('boundedBy');
+                var content = location;
 
-                create_mark(coords, 'point', postID, postID);
+                create_mark(coords, 'point', postID, content);
 
                 $map.setBounds(bounds, {
                     checkZoomRange: true
                 });
+
+                save_map();
             });
         }
 

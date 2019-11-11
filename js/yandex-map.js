@@ -45,25 +45,19 @@
 
                         if (mark.type == 'Point') { // create placemark
 
-                            place_mark = new ymaps.Placemark(mark.coords, {
-                                balloonContent: mark.content
-                            });
-
-                        } else { // if mark is circle
-
-                            place_mark = new ymaps.Circle([
+                            place_mark = new ymaps.Placemark(
                                 mark.coords,
-                                mark.circle_size
-                            ], {
-                                balloonContent: mark.content
-                            }, {
-                                opacity: 0.5,
-                                fillOpacity: 0.1,
-                                fillColor: "#DB709377",
-                                strokeColor: "#990066",
-                                strokeOpacity: 0.7,
-                                strokeWidth: 5
-                            });
+                                {},
+                                mark_style_house_green
+                            );
+
+                        } else if (mark.type == 'Polygon') { // if mark is polygon
+
+                            place_mark = new ymaps.Polygon(
+                                mark.coords, 
+                                {}, 
+                                polygon_style_green 
+                            );
 
                         }
 

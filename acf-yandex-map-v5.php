@@ -213,7 +213,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 
 			$dir = plugin_dir_url( __FILE__ );
 
-			wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
+			wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?apikey=a88e3e77-1626-4d3f-9f79-423e4131029e&lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
 			wp_register_script( 'acf-yandex', "{$dir}js/acf-yandex-map.min.js", array( 'yandex-map-api' ), null, true );
 
 			// additional data
