@@ -106,30 +106,51 @@
 
             console.log(term_slug);
 
-            var data = plugin_url + 'json/land-' + term_slug + '.json';
+            // var data = plugin_url + 'json/land-' + term_slug + '.json';
 
             $.when(
 
-                $.get(data, function(response) {
-
-                    if ( response.features.length > 0 ) {
-
-                        $.each(response.features, function(index, val) {
-                            $project[index] = {
-                                "id": val.id,
-                                "content": val.id,
-                                "type": val.geometry.type,
-                                "coords": val.geometry.coordinates
-                            };
-                        });
-
-                    } else {
-
-                        console.error('Data import error!');
-
+                $.post({
+                    // url: yandex_locale.ajax_url,
+                    url: ajaxurl,
+                    data: {
+                        action: 'ymaps_json_post',
+                        // nonce_code: yandex_locale.nonce,
+                        data: 'test'
                     }
-
                 })
+                .done(function(data) {
+                    console.log(data);
+                    // $object_manager.add(data);
+                    console.log('Map data loaded');
+                    // $map.setBounds($map.geoObjects.getBounds(), {
+                    //     checkZoomRange: true
+                    // });
+                })
+                .fail(function() {
+                    console.error("Map data error");
+                })
+
+                // $.get(data, function(response) {
+
+                //     if ( response.features.length > 0 ) {
+
+                //         $.each(response.features, function(index, val) {
+                //             $project[index] = {
+                //                 "id": val.id,
+                //                 "content": val.id,
+                //                 "type": val.geometry.type,
+                //                 "coords": val.geometry.coordinates
+                //             };
+                //         });
+
+                //     } else {
+
+                //         console.error('Data import error!');
+
+                //     }
+
+                // })
 
             ).done(function() {
 

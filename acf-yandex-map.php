@@ -160,7 +160,7 @@ add_action( 'wp_ajax_ymaps_json_post', 'ymaps_json_post_callback', 10 );
 add_action( 'wp_ajax_nopriv_ymaps_json_post', 'ymaps_json_post_callback', 10 );
 function ymaps_json_post_callback()
 {
-	check_ajax_referer( 'ajax-nonce', 'nonce_code' );
+	if ( !current_user_can('publish_posts') ) check_ajax_referer( 'ajax-nonce', 'nonce_code' );
 
 	if ( !isset($_POST['data']) || empty($_POST['data']) ) wp_die();
 
