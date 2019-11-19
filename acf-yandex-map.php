@@ -152,7 +152,7 @@ function get_object_data($post_id)
 	}
 }
 
-/// AJAX for front-end
+/// AJAX for front-end & back-end
 
 // Object list
 // Post objects to JSON, AJAX!
@@ -164,7 +164,20 @@ function ymaps_json_post_callback()
 
 	if ( !isset($_POST['data']) || empty($_POST['data']) ) wp_die();
 
-	$post_type = array('land', 'living', 'commercial');
+	$data = $_POST['data'];
+
+	if ( isset($data['type']) && $data['type'] === 'project' ) {
+		
+		$post_type = 'land';
+		$project = $data['name'];
+
+	} else {
+
+		$post_type = array('land', 'living', 'commercial');
+		$project = '';
+
+	};
+
 
 	$collection = array(
 		'type' => 'FeatureCollection',
@@ -174,7 +187,10 @@ function ymaps_json_post_callback()
 	$args = array(
 		'numberposts' => -1, 
 		'post_type' => $post_type,
+		'project' => $project,
 	);
+
+
 
 	// $project = ( get_the_terms( $post_id, 'project' ) ) ?: 'no-project';
 
@@ -217,6 +233,7 @@ function ymaps_json_post_callback()
 					'type' => '',
 					'coordinates' => array(),
 				),
+				'status' => get_field('status', $post_id),
 				'properties' => array(
 		      'hintContent' => $post->post_title,
 				)

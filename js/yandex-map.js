@@ -179,7 +179,7 @@
                             data: {
                                 action: 'ymaps_json_post',
                                 nonce_code: yandex_locale.nonce,
-                                data: 'test'
+                                data: 'all'
                             }
                         })
                         .done(function(data) {

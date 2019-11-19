@@ -103,33 +103,52 @@
         if ( (term_slug != 'no-project' && term_slug != undefined) || is_project ) {
 
             console.log('Import start');
-
             console.log(term_slug);
 
             // var data = plugin_url + 'json/land-' + term_slug + '.json';
 
-            $.when(
+            // $.when(
 
                 $.post({
-                    // url: yandex_locale.ajax_url,
                     url: ajaxurl,
                     data: {
                         action: 'ymaps_json_post',
-                        // nonce_code: yandex_locale.nonce,
-                        data: 'test'
+                        data: {
+                            type: 'project',
+                            name: term_slug
+                        }
                     }
                 })
-                .done(function(data) {
-                    console.log(data);
-                    // $object_manager.add(data);
-                    console.log('Map data loaded');
+                .done(function(response) {
+                    // console.log(data);
+
+                    var data = $.parseJSON(response);
+
+                    if ( data.features.length > 0 ) {
+
+                        $.each(data.features, function(index, val) {
+                            $project[index] = {
+                                "id": val.id,
+                                "content": val.id,
+                                "type": val.geometry.type,
+                                "coords": val.geometry.coordinates,
+                                "status": (val.status) ? val.status.slug : false
+                            };
+                        });
+
+                        console.log('Map data loaded');
+
+                    } else {
+
+                        console.error("Map data error");
+                    };
                     // $map.setBounds($map.geoObjects.getBounds(), {
                     //     checkZoomRange: true
                     // });
                 })
                 .fail(function() {
-                    console.error("Map data error");
-                })
+                //     console.error("Map data error");
+                });
 
                 // $.get(data, function(response) {
 
@@ -152,38 +171,40 @@
 
                 // })
 
-            ).done(function() {
+            // ).done(function() {
 
                 console.log('Import success & map start');
 
-                ymaps.ready(function () {
-                    // let's go
-                    map_init();
-                });
+            //     ymaps.ready(function () {
+            //         // let's go
+            //         map_init();
+            //     });
 
-            }).fail(function() {
+            // }).fail(function() {
 
-                console.error('Data import error!');
+            //     console.error('Data import error!');
 
-                console.log('Just map start');
+            //     console.log('Just map start');
 
-                ymaps.ready(function () {
-                    // let's go
-                    map_init();
-                });
+            //     ymaps.ready(function () {
+            //         // let's go
+            //         map_init();
+            //     });
 
-            });
+            // });
 
         } else {
 
             console.log('Just map start');
+
+        }
 
             ymaps.ready(function () {
                 // let's go
                 map_init();
             });
 
-        };
+        // };
 
         /**
          * Initialization Map
@@ -314,7 +335,7 @@
 
             $($project).each(function(index, mark) {
                 if (mark.id != postID) { // if not this post
-                    import_mark(mark.coords, mark.type, mark.id);
+                    import_mark(mark.coords, mark.type, mark.id, mark.status);
                 }
             });
 
@@ -328,6 +349,12 @@
                 create_mark(mark.coords, mark.type, mark.id, mark.content);
             });
 
+            /// Misc
+            if (is_project) {
+                $map.setBounds($map.geoObjects.getBounds(), {
+                    checkZoomRange: true
+                });
+            }
         }
 
         /**
@@ -337,7 +364,7 @@
          * @param {int} term
          * @param {int} id
          */
-        function import_mark(coords, type, id) {
+        function import_mark(coords, type, id, status) {
 
             var place_mark = null;
             var marker_type = type.toLowerCase();
@@ -351,20 +378,68 @@
 
             if (marker_type == 'point') { // create placemark
 
+                console.log(is_project);
+
+                var mark_style;
+
+                if ( is_project ) { // project admin page
+
+                    switch(status) {
+                        case 'vacant':
+                            mark_style = mark_style_house_green;
+                            break;
+                        case 'reserved':
+                            mark_style = mark_style_house_yellow;
+                            break;
+                        case 'booked':
+                            mark_style = mark_style_house_red;
+                            break;
+                        default :
+                            mark_style = mark_style_house_gray;
+                            break;
+                    }
+
+                } else {
+                    mark_style = mark_style_house_orange;
+                }
+
                 place_mark = new ymaps.Placemark(
                     coords,
                     place_mark_content,
-                    mark_style_house_orange
+                    mark_style
                 );
 
                 $collection.add(place_mark);
 
             } else if (marker_type == 'polygon') {
 
+                var polygon_style;
+
+                if ( is_project ) { // project admin page
+
+                    switch(status) {
+                        case 'vacant':
+                            polygon_style = polygon_style_green;
+                            break;
+                        case 'reserved':
+                            polygon_style = polygon_style_yellow;
+                            break;
+                        case 'booked':
+                            polygon_style = polygon_style_red;
+                            break;
+                        default :
+                            polygon_style = polygon_style_gray;
+                            break;
+                    }
+
+                } else {
+                    polygon_style = polygon_style_orange;
+                }
+
                 place_mark = new ymaps.Polygon(
                     coords,
                     place_mark_content,
-                    polygon_style_orange
+                    polygon_style
                 );
 
                 $collection.add(place_mark);
