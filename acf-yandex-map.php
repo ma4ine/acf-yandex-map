@@ -36,7 +36,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 	 * @param int|bool $post_id
 	 * @param null $data
 	 */
-	function the_yandex_map( $selector, $post_id = false, $data = null ) {
+	function the_yandex_map( $selector, $post_id = false, $data = null, $filter = false ) {
 
 		// Config
 		if ( WP_DEBUG && WP_DEBUG_DISPLAY ) {
@@ -53,7 +53,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 			// return;
 			$is_object_map = false;
 			$defaults = array(
-				'height'     => '400',
+				'height'     => '',
 				'center_lat' => '59.938888',
 				'center_lng' => '30.315230',
 				'zoom'       => '10',
@@ -76,14 +76,15 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		}
 
 		wp_localize_script( 'yandex-map-frontend', $map_id, array(
-			'params' => $value,
 			'plugin_url' => plugin_dir_url( __FILE__ ),
+			'params' => $value,
 		) );
 
 		wp_localize_script( 'yandex-map-frontend', 'yandex_locale', array(
-			'plugin_url' => plugin_dir_url( __FILE__ ),
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('ajax-nonce'),
+			'plugin_url' => plugin_dir_url( __FILE__ ),
+			'filter' => $filter,
 		) );
 
 		/**
@@ -96,10 +97,10 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		 * @param array $value Map field value
 		 */
 		$field        = get_field_object( $selector, $post_id );
-		$field_height = $field ? $field['height'] : 400;
+		$field_height = ($field['height']) ? $field['height'] . 'px' : '100%';
 		$height_map   = apply_filters( 'acf-yandex-map/height', $field_height, $selector, $post_id, $value );
 
-		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%dpx"></div>', $map_id, $height_map );
+		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%s;"></div>', $map_id, $height_map );
 	}
 
 }

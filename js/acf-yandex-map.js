@@ -105,93 +105,41 @@
             console.log('Import start');
             console.log(term_slug);
 
-            // var data = plugin_url + 'json/land-' + term_slug + '.json';
-
-            // $.when(
-
-                $.post({
-                    url: ajaxurl,
+            $.post({
+                url: ajaxurl,
+                data: {
+                    action: 'ymaps_json_post',
                     data: {
-                        action: 'ymaps_json_post',
-                        data: {
-                            type: 'project',
-                            name: term_slug
-                        }
+                        type: 'project',
+                        name: term_slug
                     }
-                })
-                .done(function(response) {
-                    // console.log(data);
+                }
+            })
+            .done(function(response) {
 
-                    var data = $.parseJSON(response);
+                var data = $.parseJSON(response);
 
-                    if ( data.features.length > 0 ) {
+                if ( data.features.length > 0 ) {
 
-                        $.each(data.features, function(index, val) {
-                            $project[index] = {
-                                "id": val.id,
-                                "content": val.id,
-                                "type": val.geometry.type,
-                                "coords": val.geometry.coordinates,
-                                "status": (val.status) ? val.status.slug : false
-                            };
-                        });
+                    $.each(data.features, function(index, val) {
+                        $project[index] = {
+                            "id": val.id,
+                            "content": val.id,
+                            "type": val.geometry.type,
+                            "coords": val.geometry.coordinates,
+                            "status": (val.status) ? val.status.slug : false
+                        };
+                    });
 
-                        console.log('Map data loaded');
+                    console.log('Map data loaded');
 
-                    } else {
+                } else {
 
-                        console.error("Map data error");
-                    };
-                    // $map.setBounds($map.geoObjects.getBounds(), {
-                    //     checkZoomRange: true
-                    // });
-                })
-                .fail(function() {
-                //     console.error("Map data error");
-                });
+                    console.error("Map data error");
+                };
+            });
 
-                // $.get(data, function(response) {
-
-                //     if ( response.features.length > 0 ) {
-
-                //         $.each(response.features, function(index, val) {
-                //             $project[index] = {
-                //                 "id": val.id,
-                //                 "content": val.id,
-                //                 "type": val.geometry.type,
-                //                 "coords": val.geometry.coordinates
-                //             };
-                //         });
-
-                //     } else {
-
-                //         console.error('Data import error!');
-
-                //     }
-
-                // })
-
-            // ).done(function() {
-
-                console.log('Import success & map start');
-
-            //     ymaps.ready(function () {
-            //         // let's go
-            //         map_init();
-            //     });
-
-            // }).fail(function() {
-
-            //     console.error('Data import error!');
-
-            //     console.log('Just map start');
-
-            //     ymaps.ready(function () {
-            //         // let's go
-            //         map_init();
-            //     });
-
-            // });
+            console.log('Import success & map start');
 
         } else {
 
@@ -199,12 +147,10 @@
 
         }
 
-            ymaps.ready(function () {
-                // let's go
-                map_init();
-            });
-
-        // };
+        ymaps.ready(function () {
+            // let's go
+            map_init();
+        });
 
         /**
          * Initialization Map
@@ -328,7 +274,7 @@
             /// Collection
 
             $collection = new ymaps.GeoObjectCollection(null, {
-                preset: 'islands#yellowIcon'
+                // presets
             });
 
             /// Marks import

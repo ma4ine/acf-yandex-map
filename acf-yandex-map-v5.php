@@ -51,7 +51,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 			*/
 
 			$this->defaults = array(
-				'height'     => '400',
+				'height'     => '',
 				'center_lat' => '55.7522200',
 				'center_lng' => '37.6155600',
 				'zoom'       => '14',
@@ -103,6 +103,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
 				'instructions' => __( 'Set map height', YA_MAP_LANG_DOMAIN ),
 				'type'         => 'number',
 				'name'         => 'height',
+				'placeholder'  => '100%',
 				'append'       => 'px'
 			) );
 
@@ -203,7 +204,7 @@ if ( ! class_exists( 'acf_field_yandex_map' ) ):
                 </tr>
             </table>
             <div class="map"
-                 style="width: auto;height:<?php echo ( esc_attr( $field['height'] ) ) ?: $this->defaults['height'] ?>px"></div>
+                 style="width: auto;height: 400px"></div>
 
 
 			<?php
