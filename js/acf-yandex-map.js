@@ -324,8 +324,6 @@
 
             if (marker_type == 'point') { // create placemark
 
-                console.log(is_project);
-
                 var mark_style;
 
                 if ( is_project ) { // project admin page

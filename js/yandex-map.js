@@ -1,7 +1,5 @@
 (function ($) {
 
-    // 'use strict';
-
     /**
      * Plugin url
      */
@@ -72,27 +70,11 @@
                     $object_manager = new ymaps.ObjectManager({
                         // doesn't works with polygon
                         // clusterize: true,
-                        // gridSize: 32
+                        // gridSize: 32,
 
                         // disable default baloon
                         geoObjectOpenBalloonOnClick: false,
                     });
-
-                    $collection = new ymaps.GeoObjectCollection(null, {
-                        // presets
-                    });
-
-                    $map.geoObjects.add($object_manager);
-
-                    $object_manager.add($collection);
-
-                    // $map.geoObjects.add($collection);
-
-                    // $map.geoObjects.add($object_manager);
-
-                    // set common style
-                    // var object_style = Object.assign( {}, mark_style_house_orange, polygon_style_green );
-                    // $object_manager.objects.options.set(object_style);
 
                     $object_manager.objects.events.add('click', function (e) {
                         var object_id = e.get('objectId'),
@@ -115,7 +97,7 @@
                     // load objects method
                     function load_objects(filter) {
 
-                        // $map.geoObjects.add($object_manager);
+                        if ( !filter ) filter = 'all'; // load all objects
 
                         $.post({
                             url: yandex_locale.ajax_url,
@@ -127,49 +109,84 @@
                         })
                         .done(function(response) {
 
-                            // $object_manager.add(response);
-
                             var data = $.parseJSON(response);
-
-                            // var parsed_data = jQuery.parseJSON(data);
-                            // var features
-                            // console.log(parsed_data);
-                            // console.log('Map data loaded');
-                            // $map.setBounds($map.geoObjects.getBounds(), {
-                            //     checkZoomRange: true
-                            // });
 
                             if ( data.features.length > 0 ) {
 
                                 var objects = [];
 
-                                console.log(data.features);
-
                                 $.each(data.features, function(index, val) {
-                                    // objects[index] = {
-                                    //     "id": val.id,
-                                    //     "content": val.id,
-                                    //     "type": val.geometry.type,
-                                    //     "coords": val.geometry.coordinates,
-                                    //     "status": (val.status) ? val.status.slug : false
-                                    // };
+
                                     var status = (val.status) ? val.status.slug : false;
-                                    import_object(val.geometry.coordinates, val.geometry.type, val.id, status);
+                                    var object = {};
+
+                                    if (val.geometry.type === 'Point') {
+
+                                        var object = {
+                                            type: 'Feature',
+                                            id: val.id,
+                                            geometry: {
+                                                type: 'Point',
+                                                coordinates: val.geometry.coordinates
+                                            }
+                                        }
+
+                                        switch(status) {
+                                            case 'vacant':
+                                                object.options = mark_style_house_green;
+                                                break;
+                                            case 'reserved':
+                                                object.options = mark_style_house_yellow;
+                                                break;
+                                            case 'booked':
+                                                object.options = mark_style_house_red;
+                                                break;
+                                            default :
+                                                object.options = mark_style_house_green;
+                                                break;
+                                        }
+
+                                    } else if (val.geometry.type === 'Polygon') {
+
+                                        var object = {
+                                            type: 'Feature',
+                                            id: val.id,
+                                            geometry: {
+                                                type: 'Polygon',
+                                                coordinates: val.geometry.coordinates
+                                            }
+                                        }
+
+                                        switch(status) {
+                                            case 'vacant':
+                                                object.options = polygon_style_green;
+                                                break;
+                                            case 'reserved':
+                                                object.options = polygon_style_yellow;
+                                                break;
+                                            case 'booked':
+                                                object.options = polygon_style_red;
+                                                break;
+                                            default :
+                                                object.options = polygon_style_green;
+                                                break;
+                                        }
+
+                                    }
+
+                                    objects.push(object);
+                                    
                                 });
 
-                                // $(objects).each(function(index, mark) {
-                                //     // if (mark.id != postID) { // if not this post
-                                //         import_object(mark.coords, mark.type, mark.id, mark.status);
-                                //     // }
-                                // });
+                                $object_manager.add(objects);
+
+                                $map.geoObjects.add($object_manager);
 
                                 console.log('Map data loaded');
 
-                                console.log($collection);
-
-                                // $map.setBounds($map.geoObjects.getBounds(), {
-                                //     checkZoomRange: true
-                                // });
+                                $map.setBounds($map.geoObjects.getBounds(), {
+                                    checkZoomRange: true
+                                });
 
 
 
@@ -178,111 +195,6 @@
                                 console.error("Map data error");
                             };
                         });
-                        // .fail(function() {
-                        //     console.error("Map data error");
-                        // });
-                    }
-
-                    // import mark method
-                    function import_object(coords, type, id, status) {
-
-                        // console.log($object_manager);
-
-                        var place_mark = null;
-                        var marker_type = type.toLowerCase();
-                        var mark_id = id;
-                        var edit_url = window.location.origin + '/wp-admin/post.php?post=' + mark_id + '&action=edit';
-
-                        // var objects = [];
-                        // var place_mark_content = {
-                        //     balloonContentBody: '<span>Объект №' + mark_id + '</span><br><a href="' + edit_url + '">Редактировать</a>',
-                        //     hintContent: mark_id
-                        // }
-
-                        // console.log(status);
-
-                        if (marker_type == 'point') { // create placemark
-
-                            var mark_style;
-
-                            // if ( is_project ) { // project admin page
-
-                                switch(status) {
-                                    case 'vacant':
-                                        mark_style = mark_style_house_green;
-                                        break;
-                                    case 'reserved':
-                                        mark_style = mark_style_house_yellow;
-                                        break;
-                                    case 'booked':
-                                        mark_style = mark_style_house_red;
-                                        break;
-                                    default :
-                                        mark_style = mark_style_house_green;
-                                        break;
-                                }
-
-                            // } else {
-                                // mark_style = mark_style_house_orange;
-                            // }
-
-                            place_mark = new ymaps.Placemark(
-                                coords,
-                                // place_mark_content,
-                                {},
-                                mark_style
-                            );
-
-                            // $map.geoObjects.add(place_mark)
-                            // $object_manager.add(place_mark);
-                            $collection.add(place_mark);
-
-                        } else if (marker_type == 'polygon') {
-
-                            var polygon_style;
-
-                            // if ( is_project ) { // project admin page
-
-                                switch(status) {
-                                    case 'vacant':
-                                        polygon_style = polygon_style_green;
-                                        break;
-                                    case 'reserved':
-                                        polygon_style = polygon_style_yellow;
-                                        break;
-                                    case 'booked':
-                                        polygon_style = polygon_style_red;
-                                        break;
-                                    default :
-                                        polygon_style = polygon_style_green;
-                                        break;
-                                }
-
-                            // } else {
-                                // polygon_style = polygon_style_orange;
-                            // }
-
-                            console.log(polygon_style);
-
-                            place_mark = new ymaps.Polygon(
-                                coords,
-                                // place_mark_content,
-                                {},
-                                polygon_style
-                            );
-
-                            // $map.geoObjects.add(place_mark)
-                            // $object_manager.add(place_mark);
-                            $collection.add(place_mark);
-
-                            console.log($collection);
-
-
-                        } else {
-
-                            console.log('Object ' + id + ' without coordinates');
-
-                        }
                     }
 
                     // project objects action
@@ -294,12 +206,11 @@
 
                     // all objects action
                     $('.js-map-link').on('click', function() {
-
                         $object_manager.removeAll();
-
                         load_objects();
                     });
 
+                    // ballon methods
                     function compile_baloon_data(object_json) {
 
                         if (!object_json) return 'Ошибка!';
@@ -338,7 +249,6 @@
                         
                         return baloon_data;
                     }
-
 
                     function load_balloon_data(object_id, post_id) {
 
