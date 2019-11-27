@@ -130,7 +130,6 @@
                                                 coordinates: val.geometry.coordinates
                                             }
                                         }
-
                                         switch(status) {
                                             case 'vacant':
                                                 object.options = mark_style_house_green;
@@ -156,7 +155,6 @@
                                                 coordinates: val.geometry.coordinates
                                             }
                                         }
-
                                         switch(status) {
                                             case 'vacant':
                                                 object.options = polygon_style_green;
@@ -204,7 +202,31 @@
                         load_objects(filter);
                     };
 
-                    // all objects action
+                    // filter objects action
+                    $('.js-filter-map').on('click', function() {
+                        var filter = {};
+                        // get post type
+                        // if ($('body').hasClass('post-type-archive-land')) {
+                        //     filter.post-type = 'land';
+                        // } else if ($('body').hasClass('post-type-archive-living')) {
+                        //     filter.post-type = 'living';
+                        // } else if ($('body').hasClass('post-type-archive-commercial')) {
+                        //     filter.post-type = 'commercial';
+                        // } else {
+                        //     filter.post-type = ['land', 'living', 'commercial'];
+                        // }
+                        // get form params
+                        var form = $(this).parents('.js-filter-form').serializeArray();
+                        $(form).each(function(index, val){
+                            filter[val.name] = val.value;
+                        });
+                        // apply
+                        console.log(filter);
+                        $object_manager.removeAll();
+                        load_objects(filter);
+                    });
+
+                    // default objects action
                     $('.js-map-link').on('click', function() {
                         $object_manager.removeAll();
                         load_objects();
@@ -218,34 +240,47 @@
                         var object = $.parseJSON(object_json);
 
                         var baloon_data = 
-                                '<div class="module--header">' +
-                                    '<div class="module--title">' +
+                            '<div class="module--header">' +
+                                '<div class="module--title">' +
+                                    '<div class="module--offer">' + 
                                         '<div class="module--suptitle">' + object.offer_type + '</div>' +
-                                        object.title +
+                                        '<div class="module--status status status-' + object.status_slug + '">' + 
+                                            object.status_name + 
+                                        '</div>' +
+                                    '</div>' + 
+                                    object.title +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="module--body">' +
+                                '<div class="module--item icb">' +
+                                    '<i class="icb--icon icon icon-location"></i>' +
+                                    '<div class="icb--title">' + object.location + '</div>' +
+                                '</div>' +
+                                '<div class="module--item module--item-50">' +
+                                    '<img src="' + object.thumb_url + '" alt="Фото участка" class="module--pic">' +
+                                '</div>' +
+                                '<div class="module--item module--item-50">' +
+                                    '<div class="common_item">' +
+                                        '<div class="common_item--title"><em>Площадь</em></div>' +
+                                        '<div class="common_item--value">' + object.square + '</div>' +
+                                    '</div>' +
+                                    '<div class="common_item">' +
+                                        '<div class="common_item--title"><em>Стоимость</em></div>' +
+                                        '<div class="common_item--value">' + object.price + ' ₽</div>' +
                                     '</div>' +
                                 '</div>' +
-                                '<div class="module--body">' +
-                                    '<div class="module--item icb">' +
-                                        '<i class="icb--icon icon icon-location"></i>' +
-                                        '<div class="icb--title">' + object.location + '</div>' +
-                                    '</div>' +
-                                    '<div class="module--item module--item-50">' +
-                                        '<img src="' + object.thumb_url + '" alt="Фото участка" class="module--pic">' +
-                                    '</div>' +
-                                    '<div class="module--item module--item-50">' +
-                                        '<div class="common_item">' +
-                                            '<div class="common_item--title"><em>Площадь</em></div>' +
-                                            '<div class="common_item--value">' + object.square + '</div>' +
-                                        '</div>' +
-                                        '<div class="common_item">' +
-                                            '<div class="common_item--title"><em>Стоимость</em></div>' +
-                                            '<div class="common_item--value">' + object.price + ' ₽</div>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="module--footer module--footer-center">' +
-                                    '<a href="' + object.link + '" class="module--but but but-green">Подробнее</a>' +
-                                '</div>';
+                            '</div>';
+
+                        if (object.edit_link) {
+                            baloon_data += '<div class="module--footer">' +
+                                '<a href="' + object.edit_link + '" class="module--more">Редактировать участок</a>' + 
+                                '<a href="' + object.link + '" class="module--but but but-green">Подробнее</a>' +
+                            '</div>'
+                        } else {
+                            baloon_data += '<div class="module--footer module--footer-center">' +
+                                '<a href="' + object.link + '" class="module--but but but-green">Подробнее</a>' +
+                            '</div>';
+                        }
                         
                         return baloon_data;
                     }

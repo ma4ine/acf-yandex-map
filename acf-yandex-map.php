@@ -107,7 +107,10 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 
 function get_object_data($post_id)
 {
+	global $site_url;
+
 	$post_status = get_post_status($post_id);
+	$is_editor = current_user_can( 'edit_posts' );
 
 	if ( $post_status === 'publish' ) {
 
@@ -135,6 +138,9 @@ function get_object_data($post_id)
 		$thumb_url = ($images) 
 			? $images[0]['sizes']['thumbnail']
 			: $plugin_url . 'svg/house-1.svg';
+		$status = get_the_terms( $post_id, 'status' );
+		$status_name = ($status) ? $status[0]->name : '';
+		$status_slug = ($status) ? $status[0]->slug : '';
 
 		$post['title'] = get_the_title($post_id);
 		$post['link'] = get_permalink($post_id);
@@ -143,6 +149,14 @@ function get_object_data($post_id)
 		$post['location'] = $location;
 		$post['price'] = $price;
 		$post['thumb_url'] = $thumb_url;
+		$post['status_name'] = $status_name;
+		$post['status_slug'] = $status_slug;
+
+		if ($is_editor) {
+			$post['edit_link'] = $site_url . '/wp-admin/post.php?post=' . $post_id . '&action=edit';
+		} else {
+			$post['edit_link'] = false;
+		}
 
 		return $post;
 		
@@ -167,51 +181,86 @@ function ymaps_json_post_callback()
 
 	$data = $_POST['data'];
 
-	if ( isset($data['type']) && $data['type'] === 'project' ) {
-		
-		$post_type = 'land';
-		$project = $data['name'];
+	// var_dump($data); // DEBUG
+	$post_type = array('land', 'living', 'commercial');
 
-	} else {
+	if ( in_array($_POST['data']['type'], $post_type) ) $post_type = $_POST['data']['type'];
 
-		$post_type = array('land', 'living', 'commercial');
-		$project = '';
+	$base_args = array(
+		'numberposts' => -1, 
+		'post_type' => $post_type,
+	);
 
+	$filter_args = [];
+
+	foreach ($data as $key => $value) { // collect filter vars
+		if ( $value ) {
+			switch ($key) {
+				case 'project':
+					$filter_args['project'] = $value;
+					break;
+				
+				case 'cat':
+					$filter_args['tax_query'] = [
+						'relation' => 'OR',
+						[
+							'taxonomy' => 'living_category',
+							'field'    => 'slug',
+							'terms'    => $value,
+						],
+						[
+							'taxonomy' => 'commercial_category',
+							'field'    => 'slug',
+							'terms'    => $value,
+						]
+					];
+					break;
+				
+				case 'location':
+					$filter_args['location'] = $value;
+					break;
+
+				case 'price-from':
+					$price_from = (int)str_replace(' ', '', $value);
+					$price_up = ( isset($price_up) ) ? $price_up : 1000000000000;
+					$filter_args['meta_query'] = array(
+						array(
+							'key' => 'price',
+							'type' => 'NUMERIC',
+							'value' => array( $price_from, $price_up ),
+							'compare' => 'BETWEEN'
+						)
+					);
+					break;
+
+				case 'price-up':
+					$price_from = ( isset($price_from) ) ? $price_from : 0;
+					$price_up = (int)str_replace(' ', '', $value);
+					$filter_args['meta_query'] = array(
+						array(
+							'key' => 'price',
+							'type' => 'NUMERIC',
+							'value' => array( $price_from, $price_up ),
+							'compare' => 'BETWEEN'
+						)
+					);
+					break;
+				
+				default:
+					// code...
+					break;
+			};
+		};
 	};
-
 
 	$collection = array(
 		'type' => 'FeatureCollection',
 		'features' => array(),
 	);
 
-	$args = array(
-		'numberposts' => -1, 
-		'post_type' => $post_type,
-		'project' => $project,
-	);
+	$args = array_merge($base_args, $filter_args);
 
-
-
-	// $project = ( get_the_terms( $post_id, 'project' ) ) ?: 'no-project';
-
-	// if ( $post_type === 'land' && $project != 'no-project' ) {
-
-	// 	$project = $project[0]->slug;
-
-	// 	$add_args = array(
-	// 		'project' => $project,
-	// 	);
-
-	// } else {
-
-	// 	$add_args = array(
-	// 		// nothing
-	// 	);
-
-	// }
-
-	// $args = array_merge($base_args, $add_args);
+	// var_dump($args); // DEBUG
 
 	$posts = get_posts( $args );
 
@@ -225,11 +274,8 @@ function ymaps_json_post_callback()
 
 			$object = array(
 				'type' => 'Feature',
-				// 'postType' => $post_type,
-				// 'project' => $project,
 				'id' => $post_id,
 				'title' => $post->post_title,
-				// 'link' => '',
 				'geometry' => array(
 					'type' => '',
 					'coordinates' => array(),
