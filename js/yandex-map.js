@@ -13,6 +13,7 @@
     ymaps.ready(function () {
 
         var $maps = $('.yandex-map');
+
         $maps.each(function (index, value) {
             var $mapElement = $(value),
                 id = $mapElement.attr('id');
@@ -37,36 +38,29 @@
 
                 // Object map
                 if ($params.marks != undefined) {
-                   
                     $($params.marks).each(function (index, mark) {
                         var place_mark = null;
-
                         if (mark.type == 'Point') { // create placemark
-
                             place_mark = new ymaps.Placemark(
                                 mark.coords,
                                 {},
                                 mark_style_house_green
                             );
-
                         } else if (mark.type == 'Polygon') { // if mark is polygon
-
                             place_mark = new ymaps.Polygon(
                                 mark.coords, 
                                 {}, 
                                 polygon_style_green 
                             );
-
                         }
-
                         $map.geoObjects.add(place_mark);
                     });
-
                 };
 
                 // Main map
                 if (id === 'ymap_full' || id === 'ymap_project' ) {
 
+                    // object manager instance
                     $object_manager = new ymaps.ObjectManager({
                         // doesn't works with polygon
                         // clusterize: true,
@@ -76,6 +70,7 @@
                         geoObjectOpenBalloonOnClick: false,
                     });
 
+                    // object manager event
                     $object_manager.objects.events.add('click', function (e) {
                         var object_id = e.get('objectId'),
                             obj = $object_manager.objects.getById(object_id),
@@ -108,6 +103,8 @@
                             }
                         })
                         .done(function(response) {
+
+                            console.log(response);
 
                             var data = $.parseJSON(response);
 
@@ -144,7 +141,6 @@
                                                 object.options = mark_style_house_green;
                                                 break;
                                         }
-
                                     } else if (val.geometry.type === 'Polygon') {
 
                                         var object = {
@@ -169,19 +165,13 @@
                                                 object.options = polygon_style_green;
                                                 break;
                                         }
-
                                     }
-
                                     objects.push(object);
-                                    
                                 });
 
                                 $object_manager.add(objects);
-
                                 $map.geoObjects.add($object_manager);
-
                                 console.log('Map data loaded');
-
                                 $map.setBounds($map.geoObjects.getBounds(), {
                                     checkZoomRange: true
                                 });
@@ -195,26 +185,44 @@
                         });
                     }
 
+                    // toggle map method
+                    function toggle_map() {
+                        $('.js-wrapper').toggleClass('wrapper-map_show');
+                        $('.js-supheader').toggleClass('supheader-hidden');
+                        $('.js-header').toggleClass('header-map_show');
+                        $('.js-content').toggleClass('content-hidden');
+                        $('.js-footer').toggleClass('footer-hidden');
+
+                        $('.js-big-map').toggle();
+                        $('.yandex-map').toggle();
+
+                        $map.container.fitToViewport();
+                    };
+
                     // project objects action
                     var filter = yandex_locale.filter;
+                    console.log(filter);
                     if (filter) {
                         $object_manager.removeAll()
                         load_objects(filter);
                     };
 
+                    // maybe usefull
+                    // myMap.container.fitToViewport();
+                    // $('.js-map-link').on('click', function () {    
+                    //     toggleMapClasses();
+                    // });
+
+                    // $('.js-map-close').on('click', function() {
+                    //     toggleMapClasses();
+                    // });
+
+                    // filter active
+                    $('.js-filter-map').removeAttr('disabled');
+
                     // filter objects action
                     $('.js-filter-map').on('click', function() {
                         var filter = {};
-                        // get post type
-                        // if ($('body').hasClass('post-type-archive-land')) {
-                        //     filter.post-type = 'land';
-                        // } else if ($('body').hasClass('post-type-archive-living')) {
-                        //     filter.post-type = 'living';
-                        // } else if ($('body').hasClass('post-type-archive-commercial')) {
-                        //     filter.post-type = 'commercial';
-                        // } else {
-                        //     filter.post-type = ['land', 'living', 'commercial'];
-                        // }
                         // get form params
                         var form = $(this).parents('.js-filter-form').serializeArray();
                         $(form).each(function(index, val){
@@ -224,12 +232,20 @@
                         console.log(filter);
                         $object_manager.removeAll();
                         load_objects(filter);
+                        toggle_map();
                     });
 
                     // default objects action
                     $('.js-map-link').on('click', function() {
                         $object_manager.removeAll();
+                        toggle_map();
                         load_objects();
+                    });
+
+                    // default close action
+                    $('.js-map-close').on('click', function() {
+                        $object_manager.removeAll();
+                        toggle_map();
                     });
 
                     // ballon methods
@@ -313,12 +329,8 @@
                     function has_balloon_data(object_id) {
                         return $object_manager.objects.getById(object_id).properties.balloonContent;
                     }
-
                 }
-
             }
         });
-
     });
-
 })(jQuery);

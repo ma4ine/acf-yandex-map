@@ -99,8 +99,9 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		$field        = get_field_object( $selector, $post_id );
 		$field_height = ($field['height']) ? $field['height'] . 'px' : '100%';
 		$height_map   = apply_filters( 'acf-yandex-map/height', $field_height, $selector, $post_id, $value );
+		$display 			= ($map_id === 'ymap_full') ? 'none' : 'block';
 
-		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%s;"></div>', $map_id, $height_map );
+		echo sprintf( '<div class="yandex-map" id="%s" style="width:auto;height:%s;display:%s;"></div>', $map_id, $height_map, $display );
 	}
 
 }
@@ -184,7 +185,8 @@ function ymaps_json_post_callback()
 	// var_dump($data); // DEBUG
 	$post_type = array('land', 'living', 'commercial');
 
-	if ( in_array($_POST['data']['type'], $post_type) ) $post_type = $_POST['data']['type'];
+	if ( isset($_POST['data']['type']) && in_array($_POST['data']['type'], $post_type) ) 
+		$post_type = $_POST['data']['type'];
 
 	$base_args = array(
 		'numberposts' => -1, 
