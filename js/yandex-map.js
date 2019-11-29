@@ -103,22 +103,13 @@
                             }
                         })
                         .done(function(response) {
-
-                            console.log(response);
-
                             var data = $.parseJSON(response);
-
                             if ( data.features.length > 0 ) {
-
                                 var objects = [];
-
                                 $.each(data.features, function(index, val) {
-
                                     var status = (val.status) ? val.status.slug : false;
                                     var object = {};
-
                                     if (val.geometry.type === 'Point') {
-
                                         var object = {
                                             type: 'Feature',
                                             id: val.id,
@@ -142,7 +133,6 @@
                                                 break;
                                         }
                                     } else if (val.geometry.type === 'Polygon') {
-
                                         var object = {
                                             type: 'Feature',
                                             id: val.id,
@@ -207,16 +197,6 @@
                         load_objects(filter);
                     };
 
-                    // maybe usefull
-                    // myMap.container.fitToViewport();
-                    // $('.js-map-link').on('click', function () {    
-                    //     toggleMapClasses();
-                    // });
-
-                    // $('.js-map-close').on('click', function() {
-                    //     toggleMapClasses();
-                    // });
-
                     // filter active
                     $('.js-filter-map').removeAttr('disabled');
 
@@ -246,6 +226,32 @@
                     $('.js-map-close').on('click', function() {
                         $object_manager.removeAll();
                         toggle_map();
+                    });
+
+                    // on map filter
+                    $('.js-onmap-cat-var').on('click', function() {
+
+                        // labels
+                        var wrap = $(this).parents('.js-onmap-cat');
+                        var current = wrap.find('.js-onmap-cat-cur');
+                        var current_label = current.text();
+                        var current_value = current.data('value');
+                        var select =  $(this);
+                        var select_label =  select.text();
+                        var select_value =  select.data('value');
+
+                        current.text(select_label);
+                        current.data('value', select_value);
+                        select.text(current_label);
+                        select.data('value', current_value);
+
+                        // data
+                        console.log(select_value);
+                        $object_manager.removeAll();
+                        var filter = {
+                            cat: select_value
+                        };
+                        load_objects(filter);
                     });
 
                     // ballon methods
