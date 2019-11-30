@@ -91,9 +91,7 @@
                     
                     // load objects method
                     function load_objects(filter) {
-
                         if ( !filter ) filter = 'all'; // load all objects
-
                         $.post({
                             url: yandex_locale.ajax_url,
                             data: {
@@ -165,11 +163,7 @@
                                 $map.setBounds($map.geoObjects.getBounds(), {
                                     checkZoomRange: true
                                 });
-
-
-
                             } else {
-
                                 console.error("Map data error");
                             };
                         });
@@ -191,7 +185,6 @@
 
                     // project objects action
                     var filter = yandex_locale.filter;
-                    console.log(filter);
                     if (filter) {
                         $object_manager.removeAll()
                         load_objects(filter);
@@ -209,10 +202,22 @@
                             filter[val.name] = val.value;
                         });
                         // apply
-                        console.log(filter);
                         $object_manager.removeAll();
                         load_objects(filter);
                         toggle_map();
+                        // cat data filter fill
+                        var cur_cat = $('.js-onmap-cat-var[data-value="' + filter.cat + '"]');
+                        if (cur_cat.length > 0) {
+                            $('.js-onmap-cat-cur').text(cur_cat.text());
+                            $('.js-onmap-cat-cur').data('value', cur_cat.data('value'));
+                        }
+                        // price data filter fill
+                        if (filter.pricefrom) {
+                            price_slider.noUiSlider.set([filter.pricefrom, null]);
+                        }
+                        if (filter.priceup) {
+                            price_slider.noUiSlider.set([null, filter.priceup]);
+                        }
                     });
 
                     // default objects action
@@ -220,6 +225,7 @@
                         $object_manager.removeAll();
                         toggle_map();
                         load_objects();
+                        load_prices();
                     });
 
                     // default close action
@@ -230,7 +236,6 @@
 
                     // on map filter
                     $('.js-onmap-cat-var').on('click', function() {
-
                         // labels
                         var wrap = $(this).parents('.js-onmap-cat');
                         var current = wrap.find('.js-onmap-cat-cur');
@@ -246,11 +251,89 @@
                         select.data('value', current_value);
 
                         // data
-                        console.log(select_value);
                         $object_manager.removeAll();
                         var filter = {
                             cat: select_value
                         };
+                        load_objects(filter);
+                        load_prices(select_value);
+                    });
+
+                    // price range slider
+                    var price_slider = document.getElementById('price_slider');
+                    var price_min = $(price_slider).data('min');
+                    var price_max = $(price_slider).data('max');
+
+                    noUiSlider.create(price_slider, {
+                        start: [price_min, price_max],
+                        connect: true,
+                        range: {
+                            'min': price_min,
+                            'max': price_max
+                        },
+                        format: wNumb({
+                            decimals: 0
+                        })
+                    });
+
+                    price_slider.noUiSlider.on('slide', function () {
+                        var values = price_slider.noUiSlider.get();
+
+                        $('#price_slider_data_1').text(values[0]);
+                        $('#price_slider_data_2').text(values[1]);
+
+                        moneyMaskRefresh($('#price_slider_data_1'));
+                        moneyMaskRefresh($('#price_slider_data_2'));
+                    });
+
+                    // apply price filter
+                    price_slider.noUiSlider.on('change', function () {
+                        var values = price_slider.noUiSlider.get();
+                        var cat =  $('.js-onmap-cat-cur').data('value');
+                        $object_manager.removeAll();
+                        var filter = {
+                            cat: cat,
+                            pricefrom: values[0],
+                            priceup: values[1]
+                        };
+                        load_objects(filter);
+                    });
+                    
+                    // load prices method
+                    function load_prices(cat) {
+                        if (!cat) cat = '';
+                        $.get({
+                            url: yandex_locale.ajax_url,
+                            data: {
+                                action: 'ymap_get_prices',
+                                nonce_code: yandex_locale.nonce,
+                                data: {
+                                    cat: cat
+                                }
+                            }
+                        })
+                        .done(function(response) {
+                            var price = $.parseJSON(response);
+                            price_slider.noUiSlider.set([price.min, price.max]);
+                            $('#price_slider_data_1').text(price.min);
+                            $('#price_slider_data_2').text(price.max);
+                            moneyMaskRefresh($('#price_slider_data_1'));
+                            moneyMaskRefresh($('#price_slider_data_2'));
+                        });
+                    };
+
+                    // special offers check
+                    $('.js-onmap-special').on('change', function() {
+                        var cat = $('.js-onmap-cat-cur').data('value');
+                        if (!cat) cat = 'all';
+                        var filter = {
+                            cat: cat,
+                            special: ''
+                        };
+                        if ($(this).prop("checked")) {
+                            filter.special = 'EXISTS';
+                        };
+                        $object_manager.removeAll();
                         load_objects(filter);
                     });
 

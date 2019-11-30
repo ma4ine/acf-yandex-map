@@ -183,6 +183,7 @@ function ymaps_json_post_callback()
 	$data = $_POST['data'];
 
 	// var_dump($data); // DEBUG
+
 	$post_type = array('land', 'living', 'commercial');
 
 	if ( isset($_POST['data']['type']) && in_array($_POST['data']['type'], $post_type) ) 
@@ -203,49 +204,68 @@ function ymaps_json_post_callback()
 					break;
 				
 				case 'cat':
+					$operator = ($value != 'all') 
+						? 'IN' 
+						: 'EXIST';
+
 					$filter_args['tax_query'] = [
-						'relation' => 'OR',
+						'relation' => 'AND',
 						[
-							'taxonomy' => 'living_category',
-							'field'    => 'slug',
-							'terms'    => $value,
+							'relation' => 'OR',
+							[
+								'taxonomy' => 'living_category',
+								'field'    => 'slug',
+								'terms'    => $value,
+								'operator' => $operator,
+							],
+							[
+								'taxonomy' => 'commercial_category',
+								'field'    => 'slug',
+								'terms'    => $value,
+								'operator' => $operator,
+							]
 						],
-						[
-							'taxonomy' => 'commercial_category',
-							'field'    => 'slug',
-							'terms'    => $value,
-						]
 					];
+					break;
+
+				case 'special':
+					$filter_args['tax_query'][] = [
+						[
+							'taxonomy' => 'flag',
+							'field'    => 'slug',
+							'operator' => $value,
+						],
+					];  
 					break;
 				
 				case 'location':
 					$filter_args['location'] = $value;
 					break;
 
-				case 'price-from':
+				case 'pricefrom':
 					$price_from = (int)str_replace(' ', '', $value);
 					$price_up = ( isset($price_up) ) ? $price_up : 1000000000000;
-					$filter_args['meta_query'] = array(
-						array(
+					$filter_args['meta_query'] = [
+						[
 							'key' => 'price',
 							'type' => 'NUMERIC',
 							'value' => array( $price_from, $price_up ),
 							'compare' => 'BETWEEN'
-						)
-					);
+						]
+					];
 					break;
 
-				case 'price-up':
+				case 'priceup':
 					$price_from = ( isset($price_from) ) ? $price_from : 0;
 					$price_up = (int)str_replace(' ', '', $value);
-					$filter_args['meta_query'] = array(
-						array(
+					$filter_args['meta_query'] = [
+						[
 							'key' => 'price',
 							'type' => 'NUMERIC',
 							'value' => array( $price_from, $price_up ),
 							'compare' => 'BETWEEN'
-						)
-					);
+						]
+					];
 					break;
 				
 				default:
@@ -254,6 +274,8 @@ function ymaps_json_post_callback()
 			};
 		};
 	};
+
+	// var_dump($filter_args); // DEBUG
 
 	$collection = array(
 		'type' => 'FeatureCollection',
@@ -309,6 +331,8 @@ function ymaps_json_post_callback()
 
 		wp_reset_postdata();
 	}
+
+	// var_dump($posts); // DEBUG
 	
 	$json = json_encode($collection);
 
@@ -342,3 +366,70 @@ function ymap_object_load_callback()
 
 	}
 }
+
+function ymap_get_prices_method($cur_cat_slug = '')
+{
+	$prices = array();
+
+	$post_cat_operator = ( !empty($cur_cat_slug) ) 
+		? 'IN' 
+		: 'EXIST';
+
+	$posts = get_posts( array(
+		'numberposts' => -1,
+		'post_type' => array('land', 'living', 'commercial'),
+		'tax_query' => [
+			'relation' => 'OR',
+			[
+				'taxonomy' => 'living_category',
+				'field'    => 'slug',
+				'terms'    => $cur_cat_slug,
+				'operator' => $post_cat_operator
+			],
+			[
+				'taxonomy' => 'commercial_category',
+				'field'    => 'slug',
+				'terms'    => $cur_cat_slug,
+				'operator' => $post_cat_operator
+			]
+		],
+	) );
+
+	if ($posts) {
+		
+		foreach ($posts as $post) {
+			$price = get_field('price', $post->ID);
+			if ($price) $prices[$post->ID] = $price;
+		}
+	}
+
+	sort($prices);
+
+	// d($prices);
+
+	$price = array(
+		'min' => $prices[0],
+		'max' => $prices[count($prices) - 1],
+	);
+
+	return $price;
+}
+
+
+// Price filter
+add_action( "wp_ajax_nopriv_ymap_get_prices", 'ymap_get_prices_callback', 10 );
+add_action( "wp_ajax_ymap_get_prices", 'ymap_get_prices_callback', 10 );
+function ymap_get_prices_callback()
+{
+	check_ajax_referer( 'ajax-nonce', 'nonce_code' );
+
+	$cur_cat = ( isset($_GET['data']['cat']) ) ? $_GET['data']['cat'] : '';
+
+	$price = ymap_get_prices_method($cur_cat);
+
+	$result = json_encode($price);
+
+	echo $result;
+
+	wp_die();
+};
