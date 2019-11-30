@@ -91,7 +91,9 @@
                     
                     // load objects method
                     function load_objects(filter) {
-                        if ( !filter ) filter = 'all'; // load all objects
+                        if ( !filter ) filter = {
+                            cat: 'all' // load all objects
+                        };
                         $.post({
                             url: yandex_locale.ajax_url,
                             data: {
@@ -221,7 +223,7 @@
                     });
 
                     // default objects action
-                    $('.js-map-link').on('click', function() {
+                    $('.js-map-open').on('click', function() {
                         $object_manager.removeAll();
                         toggle_map();
                         load_objects();

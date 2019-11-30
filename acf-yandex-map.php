@@ -196,6 +196,8 @@ function ymaps_json_post_callback()
 
 	$filter_args = [];
 
+	// var_dump($data);
+
 	foreach ($data as $key => $value) { // collect filter vars
 		if ( $value ) {
 			switch ($key) {
