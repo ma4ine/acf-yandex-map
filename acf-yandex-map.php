@@ -309,7 +309,8 @@ function ymaps_json_post_callback()
 				'status' => get_field('status', $post_id),
 				'properties' => array(
 		      'hintContent' => $post->post_title,
-				)
+				),
+				'special' => ( has_term( '', 'flag', $post_id ) ) ? true : false,
 			);
 
 			$ymap = json_decode( get_field('ymap', $post_id), true );
@@ -400,14 +401,12 @@ function ymap_get_prices_method($cur_cat_slug = '')
 	if ($posts) {
 		
 		foreach ($posts as $post) {
-			$price = get_field('price', $post->ID);
+			$price = intval(str_replace(' ', '', get_field('price', $post->ID)));
 			if ($price) $prices[$post->ID] = $price;
 		}
 	}
 
 	sort($prices);
-
-	// d($prices);
 
 	$price = array(
 		'min' => $prices[0],
@@ -416,7 +415,6 @@ function ymap_get_prices_method($cur_cat_slug = '')
 
 	return $price;
 }
-
 
 // Price filter
 add_action( "wp_ajax_nopriv_ymap_get_prices", 'ymap_get_prices_callback', 10 );

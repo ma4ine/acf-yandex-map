@@ -34,7 +34,23 @@
                 $map.controls.remove('trafficControl');
                 $map.controls.remove('searchControl');
                 $map.controls.remove('geolocationControl');
+                $map.controls.remove('fullscreenControl');
+                $map.controls.remove('rulerControl');
                 $map.options.set('balloonMaxWidth', 290);
+
+                // Adaptive misc
+                if ($(window).width() < 768) {
+                    $map.controls.remove('typeSelector');
+                    $('.js-onmap-collapse-element').hide();
+                    $('.js-onmap-collapse-trigger').on('click', function() {
+                        var label = $(this).data('label');
+                        $(this).data('label', $(this).text()).text(label);
+                        $('.js-onmap-collapse-element').toggle();
+                    });
+                } else {
+                    $('.js-onmap-collapse-trigger').hide();
+                }
+
 
                 // Object map
                 if ($params.marks != undefined) {
@@ -91,6 +107,12 @@
                     
                     // load objects method
                     function load_objects(filter) {
+                        // loader
+                        $(".js-loader").delay(500).fadeIn('fast');
+                        $(".js-loader-inner").fadeIn();
+                        $(".js-loader-icon").show();
+                        $(".js-loader-error").hide();
+                        // data
                         if ( !filter ) filter = {
                             cat: 'all' // load all objects
                         };
@@ -120,7 +142,9 @@
                                         }
                                         switch(status) {
                                             case 'vacant':
-                                                object.options = mark_style_house_green;
+                                                object.options = (val.special) 
+                                                    ? mark_style_house_orange
+                                                    : mark_style_house_green;
                                                 break;
                                             case 'reserved':
                                                 object.options = mark_style_house_yellow;
@@ -129,7 +153,9 @@
                                                 object.options = mark_style_house_red;
                                                 break;
                                             default :
-                                                object.options = mark_style_house_green;
+                                                object.options = (val.special) 
+                                                    ? mark_style_house_orange
+                                                    : mark_style_house_green;
                                                 break;
                                         }
                                     } else if (val.geometry.type === 'Polygon') {
@@ -141,6 +167,7 @@
                                                 coordinates: val.geometry.coordinates
                                             }
                                         }
+                                        if (val.special) object.options = polygon_style_orange;
                                         switch(status) {
                                             case 'vacant':
                                                 object.options = polygon_style_green;
@@ -152,7 +179,9 @@
                                                 object.options = polygon_style_red;
                                                 break;
                                             default :
-                                                object.options = polygon_style_green;
+                                                object.options = (val.special) 
+                                                    ? polygon_style_orange
+                                                    : polygon_style_green;
                                                 break;
                                         }
                                     }
@@ -165,7 +194,13 @@
                                 $map.setBounds($map.geoObjects.getBounds(), {
                                     checkZoomRange: true
                                 });
+                                // loader
+                                $(".js-loader-inner").fadeOut(); 
+                                $(".js-loader").delay(500).fadeOut('fast');
                             } else {
+                                // loader error
+                                $(".js-loader-error").show();
+                                $(".js-loader-icon").hide();
                                 console.error("Map data error");
                             };
                         });
@@ -222,7 +257,10 @@
                         }
                     });
 
-                    // default objects action
+                    // common link active
+                    $('.js-map-open').removeAttr('disabled');
+
+                    // common open action
                     $('.js-map-open').on('click', function() {
                         $object_manager.removeAll();
                         toggle_map();
@@ -230,7 +268,7 @@
                         load_prices();
                     });
 
-                    // default close action
+                    // common close action
                     $('.js-map-close').on('click', function() {
                         $object_manager.removeAll();
                         toggle_map();
@@ -247,6 +285,10 @@
                         var select_label =  select.text();
                         var select_value =  select.data('value');
 
+                        var price = price_slider.noUiSlider.get();
+                        console.log(price);
+                        var special = $('.js-onmap-special');
+
                         current.text(select_label);
                         current.data('value', select_value);
                         select.text(current_label);
@@ -255,10 +297,13 @@
                         // data
                         $object_manager.removeAll();
                         var filter = {
-                            cat: select_value
+                            cat: select_value,
+                            pricefrom: price[0],
+                            priceup: price[1],
+                            special: (special.prop("checked")) ? 'EXISTS' : ''
                         };
                         load_objects(filter);
-                        load_prices(select_value);
+                        // load_prices(select_value);
                     });
 
                     // price range slider
@@ -290,13 +335,15 @@
 
                     // apply price filter
                     price_slider.noUiSlider.on('change', function () {
-                        var values = price_slider.noUiSlider.get();
                         var cat =  $('.js-onmap-cat-cur').data('value');
+                        var price = price_slider.noUiSlider.get();
+                        var special = $('.js-onmap-special');
                         $object_manager.removeAll();
                         var filter = {
                             cat: cat,
-                            pricefrom: values[0],
-                            priceup: values[1]
+                            pricefrom: price[0],
+                            priceup: price[1],
+                            special: (special.prop("checked")) ? 'EXISTS' : ''
                         };
                         load_objects(filter);
                     });
@@ -327,10 +374,13 @@
                     // special offers check
                     $('.js-onmap-special').on('change', function() {
                         var cat = $('.js-onmap-cat-cur').data('value');
+                        var price = price_slider.noUiSlider.get();
                         if (!cat) cat = 'all';
                         var filter = {
                             cat: cat,
-                            special: ''
+                            pricefrom: price[0],
+                            priceup: price[1],
+                            special: ($(this).prop("checked")) ? 'EXISTS' : ''
                         };
                         if ($(this).prop("checked")) {
                             filter.special = 'EXISTS';
