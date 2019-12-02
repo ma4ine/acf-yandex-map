@@ -40,9 +40,9 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 
 		// Config
 		if ( WP_DEBUG && WP_DEBUG_DISPLAY ) {
-			$debug = 'mode=debug';
+			$debug = '&mode=debug';
 		} else {
-			$debug = 'mode=release';
+			$debug = '';
 		}
 
 		$post_id = function_exists( 'acf_get_valid_post_id' ) ? acf_get_valid_post_id( $post_id ) :  $post_id;
@@ -65,7 +65,7 @@ if ( ! function_exists( 'the_yandex_map' ) ) {
 		}
 
 		$dir = plugin_dir_url( __FILE__ );
-		wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?apikey=a88e3e77-1626-4d3f-9f79-423e4131029e&' . $debug . '&lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
+		wp_register_script( 'yandex-map-api', '//api-maps.yandex.ru/2.1/?apikey=a88e3e77-1626-4d3f-9f79-423e4131029e' . $debug . '&lang=' . get_bloginfo( 'language' ), array( 'jquery' ), null );
 		wp_register_script( 'yandex-map-frontend', "{$dir}js/yandex-map.min.js", array( 'yandex-map-api' ), ACF_YA_MAP_VERSION );
 		wp_enqueue_script( 'yandex-map-frontend' );
 
